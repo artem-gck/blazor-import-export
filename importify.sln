@@ -3,7 +3,9 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.0.32112.339
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "importify", "importify\importify.csproj", "{3D3B57EA-5292-478B-A051-72F352CE411E}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Importify", "importify\Importify.csproj", "{3D3B57EA-5292-478B-A051-72F352CE411E}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Importify.Service", "Importify.Service\Importify.Service.csproj", "{EF853389-6B42-4325-B64D-52AC68D9C3B6}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -15,6 +17,10 @@ Global
 		{3D3B57EA-5292-478B-A051-72F352CE411E}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{3D3B57EA-5292-478B-A051-72F352CE411E}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{3D3B57EA-5292-478B-A051-72F352CE411E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{EF853389-6B42-4325-B64D-52AC68D9C3B6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{EF853389-6B42-4325-B64D-52AC68D9C3B6}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{EF853389-6B42-4325-B64D-52AC68D9C3B6}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{EF853389-6B42-4325-B64D-52AC68D9C3B6}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
