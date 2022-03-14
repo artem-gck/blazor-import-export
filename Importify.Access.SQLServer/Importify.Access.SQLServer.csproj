@@ -6,4 +6,13 @@
     <Nullable>enable</Nullable>
   </PropertyGroup>
 
+  <ItemGroup>
+    <PackageReference Include="Microsoft.EntityFrameworkCore" Version="6.0.3" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Importify.Access\Importify.Access.csproj" />
+    <ProjectReference Include="..\Importify.Service\Importify.Service.csproj" />
+  </ItemGroup>
+
 </Project>

@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Importify.Service.Model
+namespace Importify.Service.Models
 {
     public class Country
     {
@@ -13,9 +13,5 @@ namespace Importify.Service.Model
         public double? Area { get; set; }
         public long? Population { get; set; }
         public decimal? Gdp { get; set; }
-        public List<CommonExport>? CommonExports { get; set; } = new();
-        public List<CommonImport>? CommonImports { get; set; } = new();
-        public List<CategoryExport>? CategoryExports { get; set; } = new();
-        public List<CategoryImport>? CategoryImports { get; set; } = new();
     }
 }

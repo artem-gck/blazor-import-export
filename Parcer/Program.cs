@@ -1,10 +1,12 @@
-﻿using Importify.Service.Model.Context;
+﻿using Importify.Access.Context;
 using Parcer;
 
 var context = new ImportifyContext();
 
 context.Database.EnsureDeleted();
 context.Database.EnsureCreated();
+
+CheckDb.SetCountries(context);
 
 CheckDb.SetCommonExport(context, "data/10years-export.csv");
 CheckDb.SetCommonImport(context, "data/10years-import.csv");

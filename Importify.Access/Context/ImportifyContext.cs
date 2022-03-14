@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Importify.Access.Entities;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using System;
 using System.Collections.Generic;
@@ -6,10 +7,13 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Importify.Service.Model.Context
+namespace Importify.Access.Context
 {
     public class ImportifyContext : DbContext
     {
+        public ImportifyContext()
+        { }
+
         public ImportifyContext(DbContextOptions<ImportifyContext> options)
             : base(options)
         { }

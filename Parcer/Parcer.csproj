@@ -14,7 +14,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Importify.Service\Importify.Service.csproj" />
+    <ProjectReference Include="..\Importify.Access\Importify.Access.csproj" />
   </ItemGroup>
 
 </Project>

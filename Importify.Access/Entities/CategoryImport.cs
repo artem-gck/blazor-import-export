@@ -4,13 +4,14 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Importify.Service.Model
+namespace Importify.Access.Entities
 {
-    public class CommonExport
+    public class CategoryImport
     {
-        public int CommonExportId { get; set; }
+        public int CategoryImportId { get; set; }
         public decimal Value { get; set; }
         public Country? Country { get; set; }
         public Year? Year { get; set; }
+        public Category? Category { get; set; }
     }
 }

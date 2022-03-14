@@ -12,6 +12,9 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\Importify.Access.SQLServer\Importify.Access.SQLServer.csproj" />
+    <ProjectReference Include="..\Importify.Access\Importify.Access.csproj" />
+    <ProjectReference Include="..\Importify.Service.Logic\Importify.Service.Logic.csproj" />
     <ProjectReference Include="..\Importify.Service\Importify.Service.csproj" />
   </ItemGroup>
 

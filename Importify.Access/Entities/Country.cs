@@ -4,12 +4,15 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Importify.Service.Model
+namespace Importify.Access.Entities
 {
-    public class Year
+    public class Country
     {
-        public int YearId { get; set; }
-        public int Value { get; set; }
+        public int CountryId { get; set; }
+        public string Name { get; set; }
+        public double? Area { get; set; }
+        public long? Population { get; set; }
+        public decimal? Gdp { get; set; }
         public List<CommonExport>? CommonExports { get; set; } = new();
         public List<CommonImport>? CommonImports { get; set; } = new();
         public List<CategoryExport>? CategoryExports { get; set; } = new();

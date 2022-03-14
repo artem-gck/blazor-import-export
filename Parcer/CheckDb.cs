@@ -1,5 +1,5 @@
-﻿using Importify.Service.Model;
-using Importify.Service.Model.Context;
+﻿using Importify.Access.Context;
+using Importify.Access.Entities;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
@@ -12,6 +12,87 @@ namespace Parcer
 {
     public static class CheckDb
     {
+        public static void SetCountries(ImportifyContext context)
+        {
+            var countries = new List<Country>()
+            {
+                new Country()
+                {
+                    Name = "Австралия",
+                    Area = 7692024,
+                    Population = 25694393,
+                    Gdp = 1.346m
+                },
+                new Country()
+                {
+                    Name = "Австрия",
+                    Area = 83879,
+                    Population = 8923507,
+                    Gdp = 0.521m
+                },
+                new Country()
+                {
+                    Name = "Бельгия",
+                    Area = 30528,
+                    Population = 11480534,
+                    Gdp = 0.529m
+                },
+                new Country()
+                {
+                    Name = "Канада",
+                    Area = 9984670,
+                    Population = 38547000,
+                    Gdp = 1.921m
+                },
+                new Country()
+                {
+                    Name = "Чехия",
+                    Area = 78866,
+                    Population = 10701777,
+                    Gdp = 0.454m
+                },
+                new Country()
+                {
+                    Name = "Дания",
+                    Area = 43094,
+                    Population = 5822763,
+                    Gdp = 0.346m
+                },
+                new Country()
+                {
+                    Name = "Финляндия",
+                    Area = 338145,
+                    Population = 5543659,
+                    Gdp = 0.280m
+                },
+                new Country()
+                {
+                    Name = "Франция",
+                    Area = 643801,
+                    Population = 68084217,
+                    Gdp = 2.954m
+                },
+                new Country()
+                {
+                    Name = "Германия",
+                    Area = 357385,
+                    Population = 83019200,
+                    Gdp = 4.672m
+                },
+                new Country()
+                {
+                    Name = "Греция",
+                    Area = 131957,
+                    Population = 10741165,
+                    Gdp = 0.210m
+                }
+            };
+
+            Console.Write('.');
+            context.Countries.AddRange(countries);
+            context.SaveChanges();
+        }
+
         public static void SetCommonExport(ImportifyContext context, string path)
         {
             var countries = new Dictionary<string, string>();

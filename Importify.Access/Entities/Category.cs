@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Importify.Service.Model
+namespace Importify.Access.Entities
 {
     public class Category
     {
