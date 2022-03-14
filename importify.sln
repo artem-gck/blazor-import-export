@@ -7,7 +7,13 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Importify", "importify\Impo
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Importify.Service", "Importify.Service\Importify.Service.csproj", "{EF853389-6B42-4325-B64D-52AC68D9C3B6}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Parcer", "Parcer\Parcer.csproj", "{C1E54244-D4FA-4616-B71F-66F31BEF6DC6}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Parcer", "Parcer\Parcer.csproj", "{C1E54244-D4FA-4616-B71F-66F31BEF6DC6}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Importify.Service.Logic", "Importify.Service.Logic\Importify.Service.Logic.csproj", "{6DEC3AE3-FD9D-44B8-BE4A-4E8932CF4F5F}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Importify.Access", "Importify.Access\Importify.Access.csproj", "{7F244E5D-17DD-43A8-AE65-E80589DD1C11}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Importify.Access.SQLServer", "Importify.Access.SQLServer\Importify.Access.SQLServer.csproj", "{855D012C-3E03-4E32-9C73-5C65F95A3420}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -27,6 +33,18 @@ Global
 		{C1E54244-D4FA-4616-B71F-66F31BEF6DC6}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{C1E54244-D4FA-4616-B71F-66F31BEF6DC6}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{C1E54244-D4FA-4616-B71F-66F31BEF6DC6}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6DEC3AE3-FD9D-44B8-BE4A-4E8932CF4F5F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6DEC3AE3-FD9D-44B8-BE4A-4E8932CF4F5F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6DEC3AE3-FD9D-44B8-BE4A-4E8932CF4F5F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6DEC3AE3-FD9D-44B8-BE4A-4E8932CF4F5F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7F244E5D-17DD-43A8-AE65-E80589DD1C11}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7F244E5D-17DD-43A8-AE65-E80589DD1C11}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7F244E5D-17DD-43A8-AE65-E80589DD1C11}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7F244E5D-17DD-43A8-AE65-E80589DD1C11}.Release|Any CPU.Build.0 = Release|Any CPU
+		{855D012C-3E03-4E32-9C73-5C65F95A3420}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{855D012C-3E03-4E32-9C73-5C65F95A3420}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{855D012C-3E03-4E32-9C73-5C65F95A3420}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{855D012C-3E03-4E32-9C73-5C65F95A3420}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
