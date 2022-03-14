@@ -53,8 +53,8 @@ namespace Importify.Service.Migrations
                     b.Property<int?>("CountryId")
                         .HasColumnType("int");
 
-                    b.Property<long>("Value")
-                        .HasColumnType("bigint");
+                    b.Property<decimal>("Value")
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<int?>("YearId")
                         .HasColumnType("int");
@@ -84,8 +84,8 @@ namespace Importify.Service.Migrations
                     b.Property<int?>("CountryId")
                         .HasColumnType("int");
 
-                    b.Property<long>("Value")
-                        .HasColumnType("bigint");
+                    b.Property<decimal>("Value")
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<int?>("YearId")
                         .HasColumnType("int");
@@ -112,8 +112,8 @@ namespace Importify.Service.Migrations
                     b.Property<int?>("CountryId")
                         .HasColumnType("int");
 
-                    b.Property<long>("Value")
-                        .HasColumnType("bigint");
+                    b.Property<decimal>("Value")
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<int?>("YearId")
                         .HasColumnType("int");
@@ -138,8 +138,8 @@ namespace Importify.Service.Migrations
                     b.Property<int?>("CountryId")
                         .HasColumnType("int");
 
-                    b.Property<long>("Value")
-                        .HasColumnType("bigint");
+                    b.Property<decimal>("Value")
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<int?>("YearId")
                         .HasColumnType("int");
@@ -187,9 +187,8 @@ namespace Importify.Service.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("YearId"), 1L, 1);
 
-                    b.Property<string>("Value")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                    b.Property<int>("Value")
+                        .HasColumnType("int");
 
                     b.HasKey("YearId");
 

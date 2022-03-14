@@ -43,7 +43,7 @@ namespace Importify.Service.Migrations
                 {
                     YearId = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    Value = table.Column<string>(type: "nvarchar(max)", nullable: false)
+                    Value = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -56,7 +56,7 @@ namespace Importify.Service.Migrations
                 {
                     CategoryExportId = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    Value = table.Column<long>(type: "bigint", nullable: false),
+                    Value = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
                     CountryId = table.Column<int>(type: "int", nullable: true),
                     YearId = table.Column<int>(type: "int", nullable: true),
                     CategoryId = table.Column<int>(type: "int", nullable: true)
@@ -87,7 +87,7 @@ namespace Importify.Service.Migrations
                 {
                     CategoryImportId = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    Value = table.Column<long>(type: "bigint", nullable: false),
+                    Value = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
                     CountryId = table.Column<int>(type: "int", nullable: true),
                     YearId = table.Column<int>(type: "int", nullable: true),
                     CategoryId = table.Column<int>(type: "int", nullable: true)
@@ -118,7 +118,7 @@ namespace Importify.Service.Migrations
                 {
                     CommonExportId = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    Value = table.Column<long>(type: "bigint", nullable: false),
+                    Value = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
                     CountryId = table.Column<int>(type: "int", nullable: true),
                     YearId = table.Column<int>(type: "int", nullable: true)
                 },
@@ -143,7 +143,7 @@ namespace Importify.Service.Migrations
                 {
                     CommonImportId = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    Value = table.Column<long>(type: "bigint", nullable: false),
+                    Value = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
                     CountryId = table.Column<int>(type: "int", nullable: true),
                     YearId = table.Column<int>(type: "int", nullable: true)
                 },

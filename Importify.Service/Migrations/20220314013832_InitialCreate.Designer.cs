@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Importify.Service.Migrations
 {
     [DbContext(typeof(ImportifyContext))]
-    [Migration("20220313235424_InitialCreate")]
+    [Migration("20220314013832_InitialCreate")]
     partial class InitialCreate
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -55,8 +55,8 @@ namespace Importify.Service.Migrations
                     b.Property<int?>("CountryId")
                         .HasColumnType("int");
 
-                    b.Property<long>("Value")
-                        .HasColumnType("bigint");
+                    b.Property<decimal>("Value")
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<int?>("YearId")
                         .HasColumnType("int");
@@ -86,8 +86,8 @@ namespace Importify.Service.Migrations
                     b.Property<int?>("CountryId")
                         .HasColumnType("int");
 
-                    b.Property<long>("Value")
-                        .HasColumnType("bigint");
+                    b.Property<decimal>("Value")
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<int?>("YearId")
                         .HasColumnType("int");
@@ -114,8 +114,8 @@ namespace Importify.Service.Migrations
                     b.Property<int?>("CountryId")
                         .HasColumnType("int");
 
-                    b.Property<long>("Value")
-                        .HasColumnType("bigint");
+                    b.Property<decimal>("Value")
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<int?>("YearId")
                         .HasColumnType("int");
@@ -140,8 +140,8 @@ namespace Importify.Service.Migrations
                     b.Property<int?>("CountryId")
                         .HasColumnType("int");
 
-                    b.Property<long>("Value")
-                        .HasColumnType("bigint");
+                    b.Property<decimal>("Value")
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<int?>("YearId")
                         .HasColumnType("int");
@@ -189,9 +189,8 @@ namespace Importify.Service.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("YearId"), 1L, 1);
 
-                    b.Property<string>("Value")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                    b.Property<int>("Value")
+                        .HasColumnType("int");
 
                     b.HasKey("YearId");
 

@@ -9,7 +9,7 @@ namespace Importify.Service.Model
     public class CategoryImport
     {
         public int CategoryImportId { get; set; }
-        public long Value { get; set; }
+        public decimal Value { get; set; }
         public Country? Country { get; set; }
         public Year? Year { get; set; }
         public Category? Category { get; set; }
