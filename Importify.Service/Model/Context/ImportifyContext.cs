@@ -10,6 +10,10 @@ namespace Importify.Service.Model.Context
 {
     public class ImportifyContext : DbContext
     {
+        public ImportifyContext(DbContextOptions<ImportifyContext> options)
+            : base(options)
+        { }
+
         public DbSet<Category> Categories { get; set; } = null!;
         public DbSet<Year> Years { get; set; } = null!;
         public DbSet<Country> Countries { get; set; } = null!;

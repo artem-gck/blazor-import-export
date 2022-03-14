@@ -8,11 +8,13 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Importify.Service\Importify.Service.csproj" />
+    <Compile Remove="data\**" />
+    <EmbeddedResource Remove="data\**" />
+    <None Remove="data\**" />
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="data\" />
+    <ProjectReference Include="..\Importify.Service\Importify.Service.csproj" />
   </ItemGroup>
 
 </Project>
