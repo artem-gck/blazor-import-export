@@ -69,5 +69,31 @@ namespace Importify.Access.SQLServer
                                              .Include(import => import.Year)
                                              .Where(import => import.Category.Name == consiste && import.Year.Value == year)
                                              .ToListAsync();
+
+        public async Task<int> AddCommonExportAsync(CommonExport commonExport)
+        {
+            var commonExportDb = await _context.CommonExports.FirstOrDefaultAsync(ce => ce.Country.Name == commonExport.Country.Name && ce.Year.Value == commonExport.Year.Value);
+
+            if (commonExportDb is null)
+            {
+                var ce = await _context.CommonExports.AddAsync(commonExport);
+                return ce.Entity.CommonExportId;
+            }
+            else
+                return -1;
+        }
+
+        public async Task<int> AddCommonImportAsync(CommonImport commonImport)
+        {
+            var commonImportDb = await _context.CommonImports.FirstOrDefaultAsync(ce => ce.Country.Name == commonImport.Country.Name && ce.Year.Value == commonImport.Year.Value);
+
+            if (commonImportDb is null)
+            {
+                var ce = await _context.CommonImports.AddAsync(commonImport);
+                return ce.Entity.CommonImportId;
+            }
+            else
+                return -1;
+        }
     }
 }

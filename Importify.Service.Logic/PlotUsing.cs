@@ -1,4 +1,5 @@
 ﻿using Importify.Access;
+using Importify.Access.Entities;
 using Importify.Service.ViewModels;
 
 namespace Importify.Service.Logic
@@ -6,9 +7,10 @@ namespace Importify.Service.Logic
     public class PlotUsing : IPlotUsing
     {
         private readonly IPlotAccess _plotAccess;
+        private readonly IBasicAccess _basicAccess;
 
-        public PlotUsing(IPlotAccess plotAccess)
-            => _plotAccess = plotAccess;
+        public PlotUsing(IPlotAccess plotAccess, IBasicAccess basicAccess)
+            => (_plotAccess,  _basicAccess) = (plotAccess, basicAccess);
 
         public async Task<List<CountryImportExport>> GetCountryImportExportAsync(string country)
         {
@@ -109,6 +111,34 @@ namespace Importify.Service.Logic
                 Country = exp.Country.Name,
                 Value = exp.Value
             }).ToList();
+        }
+
+        public async Task<(int, int)> AddCommonImportExportAsync(CountryData countryData)
+        {
+            var country = await _basicAccess.GetCountry(countryData.Country);
+            var year = await _basicAccess.GetYear(countryData.Year);
+
+            country = country is not null ? country : await _basicAccess.AddCountry(countryData.Country);
+            year = year is not null ? year : await _basicAccess.AddYear(countryData.Year);
+
+            var commonExport = new CommonExport()
+            {
+                Value = countryData.ExportValue,
+                Year = year,
+                Country = country
+            };
+
+            var commonImport = new CommonImport()
+            {
+                Value = countryData.ImportValue,
+                Year = year,
+                Country = country
+            };
+
+            var commonExportId = await _plotAccess.AddCommonExportAsync(commonExport);
+            var commonImportId = await _plotAccess.AddCommonImportAsync(commonImport);
+
+            return (commonExportId, commonImportId);
         }
     }
 }

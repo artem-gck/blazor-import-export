@@ -41,5 +41,9 @@ namespace Importify.Controllers
         [HttpGet("importshare/{consiste}/{year}")]
         public async Task<ActionResult<List<CategoryShare>>> GetCategoryShareImportAsync(string consiste, int year)
             => await _plotService.GetCategoryShareImportAsync(consiste, year);
+
+        [HttpPost("commonimportexport")]
+        public async Task<IActionResult> AddCommonImportExportAsync(CountryData countryData)
+            => Ok(await _plotService.AddCommonImportExportAsync(countryData));
     }
 }

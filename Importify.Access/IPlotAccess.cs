@@ -17,5 +17,7 @@ namespace Importify.Access
         public Task<List<CategoryExport>> GetWorldExportAsync(string consiste);
         public Task<List<CategoryExport>> GetCategoryShareExportAsync(string consiste, int year);
         public Task<List<CategoryImport>> GetCategoryShareImportAsync(string consiste, int year);
+        public Task<int> AddCommonImportAsync(CommonImport commonImport);
+        public Task<int> AddCommonExportAsync(CommonExport commonExport);
     }
 }
