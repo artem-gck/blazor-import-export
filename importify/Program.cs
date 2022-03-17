@@ -11,7 +11,9 @@ builder.Services.AddDbContext<ImportifyContext>(opt =>
     opt.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 
 builder.Services.AddTransient<IBasicUsing, BasicUsing>();
+builder.Services.AddTransient<IPlotUsing, PlotUsing>();
 builder.Services.AddTransient<IBasicAccess, BasicAccess>();
+builder.Services.AddTransient<IPlotAccess, PlotAccess>();
 
 builder.Services.AddMvc();
 builder.Services.AddControllers();
