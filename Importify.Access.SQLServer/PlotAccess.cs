@@ -77,6 +77,8 @@ namespace Importify.Access.SQLServer
             if (commonExportDb is null)
             {
                 var ce = await _context.CommonExports.AddAsync(commonExport);
+                await _context.SaveChangesAsync();
+
                 return ce.Entity.CommonExportId;
             }
             else
@@ -90,10 +92,29 @@ namespace Importify.Access.SQLServer
             if (commonImportDb is null)
             {
                 var ce = await _context.CommonImports.AddAsync(commonImport);
+                await _context.SaveChangesAsync();
+
                 return ce.Entity.CommonImportId;
             }
             else
                 return -1;
+        }
+
+        public async Task<int> DeleteCommonExportAsync(CommonExport commonExport)
+        {
+            var exp = _context.CommonExports.Remove(commonExport);
+            await _context.SaveChangesAsync();
+
+            return exp.Entity.CommonExportId;
+        }
+        
+
+        public async Task<int> DeleteCommonImportAsync(CommonImport commonImport)
+        {
+            var imp = _context.CommonImports.Remove(commonImport);
+            await _context.SaveChangesAsync();
+
+            return imp.Entity.CommonImportId;
         }
     }
 }

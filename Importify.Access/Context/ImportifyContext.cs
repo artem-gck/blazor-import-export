@@ -25,6 +25,8 @@ namespace Importify.Access.Context
         public DbSet<CommonImport> CommonImports { get; set; } = null!;
         public DbSet<CategoryExport> CategoryExports { get; set; } = null!;
         public DbSet<CategoryImport> CategoryImports { get; set; } = null!;
+        public DbSet<User> Users { get; set; } = null!;
+        public DbSet<UserInfo> UserInfos { get; set; } = null!;
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {

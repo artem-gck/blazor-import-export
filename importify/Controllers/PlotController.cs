@@ -43,7 +43,11 @@ namespace Importify.Controllers
             => await _plotService.GetCategoryShareImportAsync(consiste, year);
 
         [HttpPost("commonimportexport")]
-        public async Task<IActionResult> AddCommonImportExportAsync(CountryData countryData)
-            => Ok(await _plotService.AddCommonImportExportAsync(countryData));
+        public async Task<ActionResult<int>> AddCommonImportExportAsync(CountryData countryData)
+            => await _plotService.AddCommonImportExportAsync(countryData);
+
+        [HttpDelete("commonimportexport")]
+        public async Task<ActionResult<int>> DeleteCommonImportExportAsync(CountryData countryData)
+            => await _plotService.DeleteCommonImportExportAsync(countryData);
     }
 }

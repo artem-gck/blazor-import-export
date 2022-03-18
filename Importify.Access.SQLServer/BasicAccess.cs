@@ -48,6 +48,8 @@ namespace Importify.Access.SQLServer
             };
 
             var co = await _context.Countries.AddAsync(countryDb);
+            await _context.SaveChangesAsync();
+
             return co.Entity;
         }
 
@@ -59,6 +61,8 @@ namespace Importify.Access.SQLServer
             };
 
             var ye = await _context.Years.AddAsync(yearDb);
+            await _context.SaveChangesAsync();
+
             return ye.Entity;
         }
     }

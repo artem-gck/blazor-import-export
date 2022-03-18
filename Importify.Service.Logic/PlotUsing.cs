@@ -113,7 +113,7 @@ namespace Importify.Service.Logic
             }).ToList();
         }
 
-        public async Task<(int, int)> AddCommonImportExportAsync(CountryData countryData)
+        public async Task<int> AddCommonImportExportAsync(CountryData countryData)
         {
             var country = await _basicAccess.GetCountry(countryData.Country);
             var year = await _basicAccess.GetYear(countryData.Year);
@@ -138,7 +138,32 @@ namespace Importify.Service.Logic
             var commonExportId = await _plotAccess.AddCommonExportAsync(commonExport);
             var commonImportId = await _plotAccess.AddCommonImportAsync(commonImport);
 
-            return (commonExportId, commonImportId);
+            return commonExportId;
+        }
+
+        public async Task<int> DeleteCommonImportExportAsync(CountryData countryData)
+        {
+            var country = await _basicAccess.GetCountry(countryData.Country);
+            var year = await _basicAccess.GetYear(countryData.Year);
+
+            var commonExport = new CommonExport()
+            {
+                Value = countryData.ExportValue,
+                Year = year,
+                Country = country
+            };
+
+            var commonImport = new CommonImport()
+            {
+                Value = countryData.ImportValue,
+                Year = year,
+                Country = country
+            };
+
+            var commonExportId = await _plotAccess.DeleteCommonExportAsync(commonExport);
+            var commonImportId = await _plotAccess.DeleteCommonImportAsync(commonImport);
+
+            return commonExportId;
         }
     }
 }
