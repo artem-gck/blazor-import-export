@@ -14,6 +14,7 @@ builder.Services.AddTransient<IBasicUsing, BasicUsing>();
 builder.Services.AddTransient<IAuthUsing, AuthUsing>();
 builder.Services.AddTransient<IPlotUsing, PlotUsing>();
 builder.Services.AddTransient<ITokenUsing, TokenUsing>();
+
 builder.Services.AddTransient<IBasicAccess, BasicAccess>();
 builder.Services.AddTransient<IAuthAccess, AuthAccess>();
 builder.Services.AddTransient<IPlotAccess, PlotAccess>();
