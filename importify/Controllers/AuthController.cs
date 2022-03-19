@@ -19,9 +19,6 @@ namespace Importify.Controllers
         [HttpPost("login")]
         public async Task<ActionResult<Tokens>> Login([FromBody] User loginModel)
         {
-            if (loginModel == null)
-                return BadRequest("Invalid client request");
-
             var tokens = await _authService.LoginAsync(loginModel);
 
             if (tokens is null)
@@ -38,5 +35,9 @@ namespace Importify.Controllers
             else
                 return Unauthorized();
         }
+
+        [HttpPost("registration")]
+        public async Task<ActionResult<int>> RegistrationAsync(User user)
+            => await _authService.RegistrationAsync(user);
     }
 }

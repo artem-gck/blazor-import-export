@@ -11,11 +11,11 @@ namespace Importify.Access.SQLServer
         public AuthAccess(ImportifyContext importifyContext)
             => _importifyContext = importifyContext;
 
-        public async Task<User> AuthUserAsync(string login, string password)
+        public async Task<User> AuthUserAsync(string login)
         {
             login = login is not null ? login : throw new ArgumentNullException(nameof(login));
 
-            return await _importifyContext.Users.FirstOrDefaultAsync(user => user.Login == login && user.Password == password);
+            return await _importifyContext.Users.FirstOrDefaultAsync(user => user.Login == login);
         }
 
         public async Task<User> GetUserAsync(string login)
@@ -41,5 +41,13 @@ namespace Importify.Access.SQLServer
 
         public async Task<List<User>> GetUsersAsync()
             => await _importifyContext.Users.Include(user => user.UserInfo).ToListAsync();
+
+        public async Task<int> AddUserAsync(User user)
+        {
+            var us = await _importifyContext.Users.AddAsync(user);
+            await _importifyContext.SaveChangesAsync();
+
+            return us.Entity.UserId;
+        }
     }
 }

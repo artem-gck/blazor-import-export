@@ -5,7 +5,8 @@ namespace Importify.Service
 {
     public interface IAuthUsing
     {
-        public Task<Tokens> LoginAsync(User loginModel);
+        public Task<Tokens> LoginAsync(User user);
+        public Task<int> RegistrationAsync(User user);
         public Task<List<User>> GetUsersAsync();
     }
 }

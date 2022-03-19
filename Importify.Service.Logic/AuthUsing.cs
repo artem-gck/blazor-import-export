@@ -3,6 +3,7 @@ using Importify.Access;
 using Importify.Service;
 using Importify.Service.Models;
 using Importify.Service.ViewModels;
+using Microsoft.AspNetCore.Cryptography.KeyDerivation;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
@@ -19,6 +20,11 @@ namespace Importify.Service.Logic
         private readonly int _liveTimeRefreshTokenHours;
         private readonly string _key;
 
+        private const KeyDerivationPrf Pbkdf2Prf = KeyDerivationPrf.HMACSHA1;
+        private const int Pbkdf2IterCount = 1000;
+        private const int Pbkdf2SubkeyLength = 256 / 8;
+        private const int SaltSize = 128 / 8;
+
         public AuthUsing(IAuthAccess access, IConfiguration config)
         {
             _access = access;
@@ -29,12 +35,10 @@ namespace Importify.Service.Logic
 
         public async Task<Tokens> LoginAsync(User user)
         {
-            var userData = await _access.AuthUserAsync(user.Login, user.Password);
+            var userData = await _access.AuthUserAsync(user.Login);
 
-            if (userData == null)
-            {
+            if (userData is null || !CheckPassword(userData.Password, user.Password))
                 return null;
-            }
 
             var claims = new List<Claim>
             {
@@ -57,12 +61,45 @@ namespace Importify.Service.Logic
             };
         }
 
-        public async Task<List<User>> GetUsersAsync()
+        public async Task<int> RegistrationAsync(User user)
         {
-            var config = new MapperConfiguration(cfg => cfg.CreateMap<Access.Entities.User, User>());
+            var password = HashPassword(user.Password);
+
+            var config = new MapperConfiguration(cfg => cfg.CreateMap<UserInfo, Access.Entities.UserInfo>());
             var mapper = new Mapper(config);
 
-            return mapper.Map<List<User>>(await _access.GetUsersAsync());
+            var userInfo = mapper.Map<Access.Entities.UserInfo>(user.UserInfo);
+
+            config = new MapperConfiguration(cfg => cfg.CreateMap<User, Access.Entities.User>()
+                                                       .ForMember(us => us.UserInfo, opt => opt.Ignore())
+                                                       .ForMember(us => us.Password, opt => opt.Ignore()));
+            mapper = new Mapper(config);
+
+            var userDb = mapper.Map<Access.Entities.User>(user);
+            userDb.UserInfo = userInfo;
+            userDb.Password = password;
+
+            return await _access.AddUserAsync(userDb);
+        }
+
+        public async Task<List<User>> GetUsersAsync()
+        {
+            var users = await _access.GetUsersAsync();
+            
+            var config = new MapperConfiguration(cfg => cfg.CreateMap<Access.Entities.UserInfo, UserInfo>().ForMember(usi => usi.User, opt => opt.Ignore()));
+            var mapper = new Mapper(config);
+
+            var userInfos = users.Select(us => mapper.Map<UserInfo>(us.UserInfo)).ToList();
+
+            config = new MapperConfiguration(cfg => cfg.CreateMap<Access.Entities.User, User>().ForMember(us => us.UserInfo, opt => opt.Ignore()));
+            mapper = new Mapper(config);
+
+            var userModels = users.Select(us => mapper.Map<User>(us)).ToList();
+
+            for(var i = 0; i < userInfos.Count; i++)
+                userModels[i].UserInfo = userInfos[i];
+
+            return userModels;
         }
 
         private string GenerateAccessToken(IEnumerable<Claim> claims)
@@ -83,7 +120,7 @@ namespace Importify.Service.Logic
             return tokenString;
         }
 
-        private string GenerateRefreshToken()
+        private static string GenerateRefreshToken()
         {
             var randomNumber = new byte[32];
 
@@ -91,6 +128,39 @@ namespace Importify.Service.Logic
             rng.GetBytes(randomNumber);
 
             return Convert.ToBase64String(randomNumber);
+        }
+
+        private static byte[] HashPassword(string password)
+        {
+            using var rngCsp = new RNGCryptoServiceProvider();
+
+            var salt = new byte[SaltSize];
+
+            rngCsp.GetBytes(salt);
+            var subkey = KeyDerivation.Pbkdf2(password, salt, Pbkdf2Prf, Pbkdf2IterCount, Pbkdf2SubkeyLength);
+
+            var outputBytes = new byte[1 + SaltSize + Pbkdf2SubkeyLength];
+            outputBytes[0] = 0x00;
+            Buffer.BlockCopy(salt, 0, outputBytes, 1, SaltSize);
+            Buffer.BlockCopy(subkey, 0, outputBytes, 1 + SaltSize, Pbkdf2SubkeyLength);
+
+            return outputBytes;
+        }
+
+        private static bool CheckPassword(byte[] hashPassword, string password)
+        {
+            if (hashPassword.Length != 1 + SaltSize + Pbkdf2SubkeyLength)
+                return false;
+
+            byte[] salt = new byte[SaltSize];
+            Buffer.BlockCopy(hashPassword, 1, salt, 0, salt.Length);
+
+            byte[] expectedSubkey = new byte[Pbkdf2SubkeyLength];
+            Buffer.BlockCopy(hashPassword, 1 + salt.Length, expectedSubkey, 0, expectedSubkey.Length);
+
+            byte[] actualSubkey = KeyDerivation.Pbkdf2(password, salt, Pbkdf2Prf, Pbkdf2IterCount, Pbkdf2SubkeyLength);
+
+            return CryptographicOperations.FixedTimeEquals(actualSubkey, expectedSubkey);
         }
     }
 }
