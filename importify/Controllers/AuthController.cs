@@ -9,23 +9,34 @@ namespace Importify.Controllers
     [ApiController]
     public class AuthController : Controller
     {
-        private readonly IAuthUsing _service;
+        private readonly IAuthUsing _authService;
+        private readonly ITokenUsing _tokenService;
+        private readonly string _headerName;
 
-        public AuthController(IAuthUsing service)
-            => _service = service;
+        public AuthController(IAuthUsing authService, ITokenUsing tokenService, IConfiguration configuration)
+            => (_authService, _tokenService, _headerName) = (authService, tokenService, configuration.GetSection("HeaderName").Value);
 
-        [HttpPost, Route("login")]
+        [HttpPost("login")]
         public async Task<ActionResult<Tokens>> Login([FromBody] User loginModel)
         {
             if (loginModel == null)
                 return BadRequest("Invalid client request");
 
-            var tokens = await _service.Login(loginModel);
+            var tokens = await _authService.LoginAsync(loginModel);
 
             if (tokens is null)
                 return Unauthorized();
 
             return tokens;
+        }
+
+        [HttpGet("users")]
+        public async Task<ActionResult<List<User>>> GetUsersAsync()
+        {
+            if (await _tokenService.CheckAccessKey(Request.Headers[_headerName].ToString()))
+                return await _authService.GetUsersAsync();
+            else
+                return Unauthorized();
         }
     }
 }

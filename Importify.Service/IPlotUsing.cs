@@ -18,5 +18,6 @@ namespace Importify.Service
         public Task<List<CategoryShare>> GetCategoryShareImportAsync(string consiste, int year);
         public Task<int> AddCommonImportExportAsync(CountryData countryData);
         public Task<int> DeleteCommonImportExportAsync(CountryData countryData);
+        public Task<int> UpdateCommonImportExportAsync(CountryData countryData);
     }
 }

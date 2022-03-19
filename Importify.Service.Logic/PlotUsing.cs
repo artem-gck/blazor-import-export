@@ -165,5 +165,30 @@ namespace Importify.Service.Logic
 
             return commonExportId;
         }
+
+        public async Task<int> UpdateCommonImportExportAsync(CountryData countryData)
+        {
+            var country = await _basicAccess.GetCountry(countryData.Country);
+            var year = await _basicAccess.GetYear(countryData.Year);
+
+            var commonExport = new CommonExport()
+            {
+                Value = countryData.ExportValue,
+                Year = year,
+                Country = country
+            };
+
+            var commonImport = new CommonImport()
+            {
+                Value = countryData.ImportValue,
+                Year = year,
+                Country = country
+            };
+
+            var commonExportId = await _plotAccess.UpdateCommonExportAsync(commonExport);
+            var commonImportId = await _plotAccess.UpdateCommonImportAsync(commonImport);
+
+            return commonExportId;
+        }
     }
 }

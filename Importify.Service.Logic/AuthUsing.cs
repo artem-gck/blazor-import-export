@@ -1,4 +1,5 @@
-﻿using Importify.Access;
+﻿using AutoMapper;
+using Importify.Access;
 using Importify.Service;
 using Importify.Service.Models;
 using Importify.Service.ViewModels;
@@ -25,8 +26,8 @@ namespace Importify.Service.Logic
             _liveTimeAccessTokenMinutes = int.Parse(config.GetSection("LiveTimeAccessTokenMinutes").Value);
             _liveTimeRefreshTokenHours = int.Parse(config.GetSection("LiveTimeRefreshTokenHours").Value);
         }
-        
-        public async Task<Tokens> Login(User user)
+
+        public async Task<Tokens> LoginAsync(User user)
         {
             var userData = await _access.AuthUserAsync(user.Login, user.Password);
 
@@ -54,6 +55,14 @@ namespace Importify.Service.Logic
                 AccessToken = accessToken,
                 RefreshToken = refreshToken
             };
+        }
+
+        public async Task<List<User>> GetUsersAsync()
+        {
+            var config = new MapperConfiguration(cfg => cfg.CreateMap<Access.Entities.User, User>());
+            var mapper = new Mapper(config);
+
+            return mapper.Map<List<User>>(await _access.GetUsersAsync());
         }
 
         private string GenerateAccessToken(IEnumerable<Claim> claims)

@@ -102,19 +102,49 @@ namespace Importify.Access.SQLServer
 
         public async Task<int> DeleteCommonExportAsync(CommonExport commonExport)
         {
-            var exp = _context.CommonExports.Remove(commonExport);
+            var export = await _context.CommonExports.FirstOrDefaultAsync(exp => exp.Year == commonExport.Year);
+
+            _context.CommonExports.Remove(export);
             await _context.SaveChangesAsync();
 
-            return exp.Entity.CommonExportId;
+            return export.CommonExportId;
         }
         
 
         public async Task<int> DeleteCommonImportAsync(CommonImport commonImport)
         {
-            var imp = _context.CommonImports.Remove(commonImport);
+            var import = await _context.CommonImports.FirstOrDefaultAsync(imp => imp.Year == commonImport.Year);
+
+            _context.CommonImports.Remove(import);
             await _context.SaveChangesAsync();
 
-            return imp.Entity.CommonImportId;
+            return import.CommonImportId;
+        }
+
+        public async Task<int> UpdateCommonExportAsync(CommonExport commonExport)
+        {
+            var export = await _context.CommonExports.FirstOrDefaultAsync(exp => exp.Year == commonExport.Year);
+
+            export.Country = commonExport.Country;
+            export.Year = commonExport.Year;
+            export.Value = commonExport.Value;
+
+            await _context.SaveChangesAsync();
+
+            return export.CommonExportId;
+        }
+
+        public async Task<int> UpdateCommonImportAsync(CommonImport commonImport)
+        {
+            var import = await _context.CommonImports.FirstOrDefaultAsync(exp => exp.Year == commonImport.Year);
+
+            import.Country = commonImport.Country;
+            import.Year = commonImport.Year;
+            import.Value = commonImport.Value;
+
+            await _context.SaveChangesAsync();
+
+            return import.CommonImportId;
         }
     }
 }

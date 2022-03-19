@@ -96,5 +96,14 @@ namespace Importify.Controllers
             else
                 return Unauthorized();
         }
+
+        [HttpPut("commonimportexport")]
+        public async Task<ActionResult<int>> UpdateCommonImportExportAsync(CountryData countryData)
+        {
+            if (await _tokenService.CheckAccessKey(Request.Headers[_headerName].ToString()))
+                return await _plotService.UpdateCommonImportExportAsync(countryData);
+            else
+                return Unauthorized();
+        }
     }
 }

@@ -21,5 +21,7 @@ namespace Importify.Access
         public Task<int> AddCommonExportAsync(CommonExport commonExport);
         public Task<int> DeleteCommonExportAsync(CommonExport commonExport);
         public Task<int> DeleteCommonImportAsync(CommonImport commonImport);
+        public Task<int> UpdateCommonExportAsync(CommonExport commonExport);
+        public Task<int> UpdateCommonImportAsync(CommonImport commonImport);
     }
 }

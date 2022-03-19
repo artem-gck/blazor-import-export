@@ -38,5 +38,8 @@ namespace Importify.Access.SQLServer
 
             return true;
         }
+
+        public async Task<List<User>> GetUsersAsync()
+            => await _importifyContext.Users.Include(user => user.UserInfo).ToListAsync();
     }
 }
