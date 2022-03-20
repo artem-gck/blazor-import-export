@@ -3,17 +3,17 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.0.32112.339
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Importify", "importify\Importify.csproj", "{3D3B57EA-5292-478B-A051-72F352CE411E}"
-EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Importify.Service", "Importify.Service\Importify.Service.csproj", "{EF853389-6B42-4325-B64D-52AC68D9C3B6}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Parcer", "Parcer\Parcer.csproj", "{C1E54244-D4FA-4616-B71F-66F31BEF6DC6}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Importify.Service.Logic", "Importify.Service.Logic\Importify.Service.Logic.csproj", "{6DEC3AE3-FD9D-44B8-BE4A-4E8932CF4F5F}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Importify.Service.Logic", "Importify.Service.Logic\Importify.Service.Logic.csproj", "{6DEC3AE3-FD9D-44B8-BE4A-4E8932CF4F5F}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Importify.Access", "Importify.Access\Importify.Access.csproj", "{7F244E5D-17DD-43A8-AE65-E80589DD1C11}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Importify.Access", "Importify.Access\Importify.Access.csproj", "{7F244E5D-17DD-43A8-AE65-E80589DD1C11}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Importify.Access.SQLServer", "Importify.Access.SQLServer\Importify.Access.SQLServer.csproj", "{855D012C-3E03-4E32-9C73-5C65F95A3420}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Importify.Access.SQLServer", "Importify.Access.SQLServer\Importify.Access.SQLServer.csproj", "{855D012C-3E03-4E32-9C73-5C65F95A3420}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Importify.Server", "Importify.Server\Importify.Server.csproj", "{C6F9A31C-80FB-461F-9407-93A611C6BA7A}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Importify.Parcer", "Importify.Parcer\Importify.Parcer.csproj", "{4DBAA421-4587-4034-A493-2CBB69E2F27F}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -21,18 +21,10 @@ Global
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{3D3B57EA-5292-478B-A051-72F352CE411E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{3D3B57EA-5292-478B-A051-72F352CE411E}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{3D3B57EA-5292-478B-A051-72F352CE411E}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{3D3B57EA-5292-478B-A051-72F352CE411E}.Release|Any CPU.Build.0 = Release|Any CPU
 		{EF853389-6B42-4325-B64D-52AC68D9C3B6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{EF853389-6B42-4325-B64D-52AC68D9C3B6}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{EF853389-6B42-4325-B64D-52AC68D9C3B6}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{EF853389-6B42-4325-B64D-52AC68D9C3B6}.Release|Any CPU.Build.0 = Release|Any CPU
-		{C1E54244-D4FA-4616-B71F-66F31BEF6DC6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{C1E54244-D4FA-4616-B71F-66F31BEF6DC6}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{C1E54244-D4FA-4616-B71F-66F31BEF6DC6}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{C1E54244-D4FA-4616-B71F-66F31BEF6DC6}.Release|Any CPU.Build.0 = Release|Any CPU
 		{6DEC3AE3-FD9D-44B8-BE4A-4E8932CF4F5F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{6DEC3AE3-FD9D-44B8-BE4A-4E8932CF4F5F}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{6DEC3AE3-FD9D-44B8-BE4A-4E8932CF4F5F}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -45,6 +37,14 @@ Global
 		{855D012C-3E03-4E32-9C73-5C65F95A3420}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{855D012C-3E03-4E32-9C73-5C65F95A3420}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{855D012C-3E03-4E32-9C73-5C65F95A3420}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C6F9A31C-80FB-461F-9407-93A611C6BA7A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C6F9A31C-80FB-461F-9407-93A611C6BA7A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C6F9A31C-80FB-461F-9407-93A611C6BA7A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C6F9A31C-80FB-461F-9407-93A611C6BA7A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4DBAA421-4587-4034-A493-2CBB69E2F27F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4DBAA421-4587-4034-A493-2CBB69E2F27F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4DBAA421-4587-4034-A493-2CBB69E2F27F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4DBAA421-4587-4034-A493-2CBB69E2F27F}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
