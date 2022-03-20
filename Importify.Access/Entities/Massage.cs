@@ -9,7 +9,7 @@ namespace Importify.Access.Entities
     public class Massage
     {
         public int MassageId { get; set; }
-        public string MassageText { get; set; }
-        public User? User { get; set; }
+        public string? MassageText { get; set; }
+        public User User { get; set; }
     }
 }

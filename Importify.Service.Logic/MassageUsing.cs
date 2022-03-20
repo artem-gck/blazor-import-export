@@ -54,7 +54,7 @@ namespace Importify.Service.Logic
 
         private async Task<Access.Entities.Massage> Maping(Massage massage)
         {
-            var user = await _authAccess.AuthUserAsync(massage.User);
+            var user = await _authAccess.GetUserAsync(massage.User);
 
             var config = new MapperConfiguration(cfg => cfg.CreateMap<Massage, Access.Entities.Massage>()
                                                        .ForMember(ms => ms.User, opt => opt.Ignore()));

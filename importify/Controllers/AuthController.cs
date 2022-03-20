@@ -27,7 +27,7 @@ namespace Importify.Controllers
             return tokens;
         }
 
-        [HttpGet("users")]
+        [HttpGet]
         public async Task<ActionResult<List<User>>> GetUsersAsync()
         {
             if (await _tokenService.CheckAccessKey(Request.Headers[_headerName].ToString()))
@@ -36,8 +36,16 @@ namespace Importify.Controllers
                 return Unauthorized();
         }
 
-        [HttpPost("registration")]
+        [HttpPost]
         public async Task<ActionResult<int>> RegistrationAsync(User user)
             => await _authService.RegistrationAsync(user);
+
+        [HttpPut]
+        public async Task<ActionResult<int>> UpdateUserAsync(User user)
+            => await _authService.UpdateUserAsync(user);
+
+        [HttpDelete]
+        public async Task<ActionResult<int>> DeleteUserAsync(User user)
+            => await _authService.DeleteUserAsync(user);
     }
 }

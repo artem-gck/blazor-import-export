@@ -11,19 +11,12 @@ namespace Importify.Access.SQLServer
         public AuthAccess(ImportifyContext importifyContext)
             => _importifyContext = importifyContext;
 
-        public async Task<User> AuthUserAsync(string login)
+        public async Task<User> GetUserAsync(string login)
         {
             login = login is not null ? login : throw new ArgumentNullException(nameof(login));
 
             return await _importifyContext.Users.Include(us => us.UserInfo)
                                                 .FirstOrDefaultAsync(user => user.Login == login);
-        }
-
-        public async Task<User> GetUserAsync(string login)
-        {
-            login = login is not null ? login : throw new ArgumentNullException(nameof(login));
-
-            return await _importifyContext.Users.FirstOrDefaultAsync(user => user.Login == login);
         }
 
         public async Task<bool> SetNewRefreshKeyAsync(User user)
@@ -50,6 +43,29 @@ namespace Importify.Access.SQLServer
             await _importifyContext.SaveChangesAsync();
 
             return us.Entity.UserId;
+        }
+
+        public async Task<int> UpdateUserAsync(User user)
+        {
+            var us = await _importifyContext.Users.Include(user => user.UserInfo)
+                                                  .FirstOrDefaultAsync(us => us.Login == user.Login);
+
+            us.Password = user.Password;
+            us.UserInfo = user.UserInfo;
+
+            await _importifyContext.SaveChangesAsync();
+
+            return us.UserId;
+        }
+
+        public async Task<int> DeleteUserAsync(User user)
+        {
+            var us = await _importifyContext.Users.FirstOrDefaultAsync(us => us.Login == user.Login);
+
+            _importifyContext.Users.Remove(us);
+            await _importifyContext.SaveChangesAsync();
+
+            return us.UserId;
         }
     }
 }

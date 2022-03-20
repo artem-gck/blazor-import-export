@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Importify.Access.Migrations
 {
     [DbContext(typeof(ImportifyContext))]
-    [Migration("20220319203705_InitialCreate")]
+    [Migration("20220320175050_InitialCreate")]
     partial class InitialCreate
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -190,10 +190,9 @@ namespace Importify.Access.Migrations
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("MassageId"), 1L, 1);
 
                     b.Property<string>("MassageText")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int?>("UserId")
+                    b.Property<int>("UserId")
                         .HasColumnType("int");
 
                     b.HasKey("MassageId");
@@ -237,11 +236,9 @@ namespace Importify.Access.Migrations
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("UserInfoId"), 1L, 1);
 
                     b.Property<string>("NumberOfPhone")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Position")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<int>("UserId")
@@ -347,7 +344,9 @@ namespace Importify.Access.Migrations
                 {
                     b.HasOne("Importify.Access.Entities.User", "User")
                         .WithMany("Massages")
-                        .HasForeignKey("UserId");
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.Navigation("User");
                 });
@@ -385,7 +384,8 @@ namespace Importify.Access.Migrations
                 {
                     b.Navigation("Massages");
 
-                    b.Navigation("UserInfo");
+                    b.Navigation("UserInfo")
+                        .IsRequired();
                 });
 
             modelBuilder.Entity("Importify.Access.Entities.Year", b =>

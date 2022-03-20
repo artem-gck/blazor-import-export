@@ -10,9 +10,9 @@ namespace Importify.Access.Entities
     public class UserInfo
     {
         public int UserInfoId { get; set; }
-        public string NumberOfPhone { get; set; }
-        public string Position { get; set; }
+        public string? NumberOfPhone { get; set; }
+        public string? Position { get; set; }
         public int UserId { get; set; }
-        public User? User { get; set; }
+        public User User { get; set; }
     }
 }

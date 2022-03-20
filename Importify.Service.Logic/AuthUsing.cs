@@ -15,7 +15,7 @@ namespace Importify.Service.Logic
 {
     public class AuthUsing : IAuthUsing
     {
-        private readonly IAuthAccess _access;
+        private readonly IAuthAccess _authAccess;
         private readonly int _liveTimeAccessTokenMinutes;
         private readonly int _liveTimeRefreshTokenHours;
         private readonly string _key;
@@ -27,7 +27,7 @@ namespace Importify.Service.Logic
 
         public AuthUsing(IAuthAccess access, IConfiguration config)
         {
-            _access = access;
+            _authAccess = access;
             _key = config.GetSection("SecreteKey").Value;
             _liveTimeAccessTokenMinutes = int.Parse(config.GetSection("LiveTimeAccessTokenMinutes").Value);
             _liveTimeRefreshTokenHours = int.Parse(config.GetSection("LiveTimeRefreshTokenHours").Value);
@@ -35,7 +35,7 @@ namespace Importify.Service.Logic
 
         public async Task<Tokens> LoginAsync(User user)
         {
-            var userData = await _access.AuthUserAsync(user.Login);
+            var userData = await _authAccess.GetUserAsync(user.Login);
 
             if (userData is null || !CheckPassword(userData.Password, user.Password))
                 return null;
@@ -52,7 +52,7 @@ namespace Importify.Service.Logic
             userData.RefreshToken = refreshToken;
             userData.RefreshTokenExpiryTime = DateTime.Now.AddHours(_liveTimeRefreshTokenHours);
 
-            await _access.SetNewRefreshKeyAsync(userData);
+            await _authAccess.SetNewRefreshKeyAsync(userData);
 
             return new Tokens()
             {
@@ -79,12 +79,12 @@ namespace Importify.Service.Logic
             userDb.UserInfo = userInfo;
             userDb.Password = password;
 
-            return await _access.AddUserAsync(userDb);
+            return await _authAccess.AddUserAsync(userDb);
         }
 
         public async Task<List<User>> GetUsersAsync()
         {
-            var users = await _access.GetUsersAsync();
+            var users = await _authAccess.GetUsersAsync();
             
             var config = new MapperConfiguration(cfg => cfg.CreateMap<Access.Entities.UserInfo, UserInfo>().ForMember(usi => usi.User, opt => opt.Ignore()));
             var mapper = new Mapper(config);
@@ -100,6 +100,50 @@ namespace Importify.Service.Logic
                 userModels[i].UserInfo = userInfos[i];
 
             return userModels;
+        }
+
+        public async Task<int> UpdateUserAsync(User user)
+        {
+            var password = HashPassword(user.Password);
+
+            var config = new MapperConfiguration(cfg => cfg.CreateMap<UserInfo, Access.Entities.UserInfo>()
+                                                           .ForMember(usi => usi.User, opt => opt.Ignore()));
+            var mapper = new Mapper(config);
+
+            var userInfoModel = mapper.Map<Access.Entities.UserInfo>(user.UserInfo);
+
+
+            config = new MapperConfiguration(cfg => cfg.CreateMap<User, Access.Entities.User>()
+                                                       .ForMember(usi => usi.UserInfo, opt => opt.Ignore())
+                                                       .ForMember(usi => usi.Massages, opt => opt.Ignore())
+                                                       .ForMember(usi => usi.Password, opt => opt.Ignore()));
+            mapper = new Mapper(config);
+
+            var userModel = mapper.Map<Access.Entities.User>(user);
+            userModel.UserInfo = userInfoModel;
+            userModel.Password = password;
+
+            return await _authAccess.UpdateUserAsync(userModel);
+        }
+
+        public async Task<int> DeleteUserAsync(User user)
+        {
+            var config = new MapperConfiguration(cfg => cfg.CreateMap<UserInfo, Access.Entities.UserInfo>()
+                                               .ForMember(usi => usi.User, opt => opt.Ignore()));
+            var mapper = new Mapper(config);
+
+            var userInfoModel = mapper.Map<Access.Entities.UserInfo>(user.UserInfo);
+
+
+            config = new MapperConfiguration(cfg => cfg.CreateMap<User, Access.Entities.User>()
+                                                       .ForMember(usi => usi.UserInfo, opt => opt.Ignore())
+                                                       .ForMember(usi => usi.Massages, opt => opt.Ignore())
+                                                       .ForMember(usi => usi.Password, opt => opt.Ignore()));
+            mapper = new Mapper(config);
+
+            var userModel = mapper.Map<Access.Entities.User>(user);
+
+            return await _authAccess.DeleteUserAsync(userModel);
         }
 
         private string GenerateAccessToken(IEnumerable<Claim> claims)
