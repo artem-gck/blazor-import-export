@@ -4,14 +4,24 @@ using Importify.Service.ViewModels;
 
 namespace Importify.Service.Logic
 {
+    /// <summary>
+    /// Class for plot logic.
+    /// </summary>
+    /// <seealso cref="Importify.Service.IPlotUsing" />
     public class PlotUsing : IPlotUsing
     {
         private readonly IPlotAccess _plotAccess;
         private readonly IBasicAccess _basicAccess;
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="PlotUsing"/> class.
+        /// </summary>
+        /// <param name="plotAccess">The plot access.</param>
+        /// <param name="basicAccess">The basic access.</param>
         public PlotUsing(IPlotAccess plotAccess, IBasicAccess basicAccess)
             => (_plotAccess,  _basicAccess) = (plotAccess, basicAccess);
 
+        /// <inheritdoc/>
         public async Task<List<CountryImportExport>> GetCountryImportExportAsync(string country)
         {
             var import = await _plotAccess.GetCountryImportAsync(country);
@@ -33,6 +43,7 @@ namespace Importify.Service.Logic
             return result;
         }
 
+        /// <inheritdoc/>
         public async Task<List<CountryConstituent>> GetCountryConstituentAsync(string country)
         {
             var export = await _plotAccess.GetCountryConstituentAsync(country);
@@ -45,6 +56,7 @@ namespace Importify.Service.Logic
             }).ToList();
         }
 
+        /// <inheritdoc/>
         public async Task<List<CountryConstituent>> GetCountryShareAsync(string country, int year)
         {
             var export = await _plotAccess.GetCountryShareAsync(country, year);
@@ -57,6 +69,7 @@ namespace Importify.Service.Logic
             }).ToList();
         }
 
+        /// <inheritdoc/>
         public async Task<List<WorldConstituents>> GetWorldConstituentAsync(string consiste)
         {
             var import = await _plotAccess.GetWorldImportAsync(consiste);
@@ -79,6 +92,7 @@ namespace Importify.Service.Logic
             return result;
         }
 
+        /// <inheritdoc/>
         public async Task<List<WorldConstituentExport>> GetWorldConstituentExportAsync(string country)
         {
             var export = await _plotAccess.GetCountryConstituentAsync(country);
@@ -91,6 +105,7 @@ namespace Importify.Service.Logic
                          }).ToList();
         }
 
+        /// <inheritdoc/>
         public async Task<List<CategoryShare>> GetCategoryShareExportAsync(string consiste, int year)
         {
             var export = await _plotAccess.GetCategoryShareExportAsync(consiste, year);
@@ -102,6 +117,7 @@ namespace Importify.Service.Logic
             }).ToList();
         }
 
+        /// <inheritdoc/>
         public async Task<List<CategoryShare>> GetCategoryShareImportAsync(string consiste, int year)
         {
             var import = await _plotAccess.GetCategoryShareImportAsync(consiste, year);
@@ -113,6 +129,7 @@ namespace Importify.Service.Logic
             }).ToList();
         }
 
+        /// <inheritdoc/>
         public async Task<int> AddCommonImportExportAsync(CountryData countryData)
         {
             var country = await _basicAccess.GetCountry(countryData.Country);
@@ -141,6 +158,7 @@ namespace Importify.Service.Logic
             return commonExportId;
         }
 
+        /// <inheritdoc/>
         public async Task<int> DeleteCommonImportExportAsync(CountryData countryData)
         {
             var country = await _basicAccess.GetCountry(countryData.Country);
@@ -166,6 +184,7 @@ namespace Importify.Service.Logic
             return commonExportId;
         }
 
+        /// <inheritdoc/>
         public async Task<int> UpdateCommonImportExportAsync(CountryData countryData)
         {
             var country = await _basicAccess.GetCountry(countryData.Country);

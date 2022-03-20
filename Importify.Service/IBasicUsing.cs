@@ -1,16 +1,28 @@
 ﻿using Importify.Service.Models;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Importify.Service
 {
+    /// <summary>
+    /// Interface for basic crud.
+    /// </summary>
     public interface IBasicUsing
     {
+        /// <summary>
+        /// Gets the countries asynchronous.
+        /// </summary>
+        /// <returns>List of countries.</returns>
         public Task<List<Country>> GetCountriesAsync();
+
+        /// <summary>
+        /// Gets the years asynchronous.
+        /// </summary>
+        /// <returns>List of years.</returns>
         public Task<List<Year>> GetYearsAsync();
+
+        /// <summary>
+        /// Gets the category asynchronous.
+        /// </summary>
+        /// <returns>List of categories.</returns>
         public Task<List<Category>> GetCategoryAsync();
     }
 }

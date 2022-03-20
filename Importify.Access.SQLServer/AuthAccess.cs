@@ -4,13 +4,22 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Importify.Access.SQLServer
 {
+    /// <summary>
+    /// Class for authentification access in SQL Server.
+    /// </summary>
+    /// <seealso cref="Importify.Access.IAuthAccess" />
     public class AuthAccess : IAuthAccess
     {
         private readonly ImportifyContext _importifyContext;
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="AuthAccess"/> class.
+        /// </summary>
+        /// <param name="importifyContext">The importify context.</param>
         public AuthAccess(ImportifyContext importifyContext)
             => _importifyContext = importifyContext;
 
+        /// <inheritdoc/>
         public async Task<User> GetUserAsync(string login)
         {
             login = login is not null ? login : throw new ArgumentNullException(nameof(login));
@@ -19,6 +28,7 @@ namespace Importify.Access.SQLServer
                                                 .FirstOrDefaultAsync(user => user.Login == login);
         }
 
+        /// <inheritdoc/>
         public async Task<bool> SetNewRefreshKeyAsync(User user)
         {
             user = user is not null ? user : throw new ArgumentNullException(nameof(user));
@@ -33,10 +43,12 @@ namespace Importify.Access.SQLServer
             return true;
         }
 
+        /// <inheritdoc/>
         public async Task<List<User>> GetUsersAsync()
             => await _importifyContext.Users.Include(user => user.UserInfo)
                                             .ToListAsync();
 
+        /// <inheritdoc/>
         public async Task<int> AddUserAsync(User user)
         {
             var us = await _importifyContext.Users.AddAsync(user);
@@ -45,6 +57,7 @@ namespace Importify.Access.SQLServer
             return us.Entity.UserId;
         }
 
+        /// <inheritdoc/>
         public async Task<int> UpdateUserAsync(User user)
         {
             var us = await _importifyContext.Users.Include(user => user.UserInfo)
@@ -58,6 +71,7 @@ namespace Importify.Access.SQLServer
             return us.UserId;
         }
 
+        /// <inheritdoc/>
         public async Task<int> DeleteUserAsync(User user)
         {
             var us = await _importifyContext.Users.FirstOrDefaultAsync(us => us.Login == user.Login);

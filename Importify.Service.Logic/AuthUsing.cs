@@ -1,6 +1,5 @@
 ﻿using AutoMapper;
 using Importify.Access;
-using Importify.Service;
 using Importify.Service.Models;
 using Importify.Service.ViewModels;
 using Microsoft.AspNetCore.Cryptography.KeyDerivation;
@@ -13,6 +12,10 @@ using System.Text;
 
 namespace Importify.Service.Logic
 {
+    /// <summary>
+    /// Class for authentification logic.
+    /// </summary>
+    /// <seealso cref="Importify.Service.IAuthUsing" />
     public class AuthUsing : IAuthUsing
     {
         private readonly IAuthAccess _authAccess;
@@ -25,6 +28,11 @@ namespace Importify.Service.Logic
         private const int Pbkdf2SubkeyLength = 256 / 8;
         private const int SaltSize = 128 / 8;
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="AuthUsing"/> class.
+        /// </summary>
+        /// <param name="access">The access.</param>
+        /// <param name="config">The configuration.</param>
         public AuthUsing(IAuthAccess access, IConfiguration config)
         {
             _authAccess = access;
@@ -33,6 +41,7 @@ namespace Importify.Service.Logic
             _liveTimeRefreshTokenHours = int.Parse(config.GetSection("LiveTimeRefreshTokenHours").Value);
         }
 
+        /// <inheritdoc/>
         public async Task<Tokens> LoginAsync(User user)
         {
             var userData = await _authAccess.GetUserAsync(user.Login);
@@ -61,6 +70,7 @@ namespace Importify.Service.Logic
             };
         }
 
+        /// <inheritdoc/>
         public async Task<int> RegistrationAsync(User user)
         {
             var password = HashPassword(user.Password);
@@ -82,6 +92,7 @@ namespace Importify.Service.Logic
             return await _authAccess.AddUserAsync(userDb);
         }
 
+        /// <inheritdoc/>
         public async Task<List<User>> GetUsersAsync()
         {
             var users = await _authAccess.GetUsersAsync();
@@ -102,6 +113,7 @@ namespace Importify.Service.Logic
             return userModels;
         }
 
+        /// <inheritdoc/>
         public async Task<int> UpdateUserAsync(User user)
         {
             var password = HashPassword(user.Password);
@@ -126,6 +138,7 @@ namespace Importify.Service.Logic
             return await _authAccess.UpdateUserAsync(userModel);
         }
 
+        /// <inheritdoc/>
         public async Task<int> DeleteUserAsync(User user)
         {
             var config = new MapperConfiguration(cfg => cfg.CreateMap<UserInfo, Access.Entities.UserInfo>()

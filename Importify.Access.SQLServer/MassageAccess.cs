@@ -1,21 +1,25 @@
 ﻿using Importify.Access.Context;
 using Importify.Access.Entities;
 using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Importify.Access.SQLServer
 {
+    /// <summary>
+    /// Class for massage access in SQL Server.
+    /// </summary>
+    /// <seealso cref="Importify.Access.IMassageAccess" />
     public class MassageAccess : IMassageAccess
     {
         private readonly ImportifyContext _context;
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="MassageAccess"/> class.
+        /// </summary>
+        /// <param name="context">The context.</param>
         public MassageAccess(ImportifyContext context)
             => _context = context;
 
+        /// <inheritdoc/>
         public async Task<int> AddMassageAsync(Massage massage)
         {
             var mas = await _context.Massages.AddAsync(massage);
@@ -24,6 +28,7 @@ namespace Importify.Access.SQLServer
             return mas.Entity.MassageId;
         }
 
+        /// <inheritdoc/>
         public async Task<int> DeleteMassageAsync(Massage massage)
         {
             var massa = await _context.Massages.Include(ms => ms.User).FirstOrDefaultAsync(ms => ms.User == massage.User && ms.MassageText == massage.MassageText);
@@ -34,6 +39,7 @@ namespace Importify.Access.SQLServer
             return mas.Entity.MassageId;
         }
 
+        /// <inheritdoc/>
         public async Task<List<Massage>> GetMassagesAsync()
             => await _context.Massages.Include(ms => ms.User).ToListAsync();
     }

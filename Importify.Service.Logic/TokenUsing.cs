@@ -9,6 +9,10 @@ using System.Text;
 
 namespace Importify.Service.Logic
 {
+    /// <summary>
+    /// Class for token logic.
+    /// </summary>
+    /// <seealso cref="Importify.Service.ITokenUsing" />
     public class TokenUsing : ITokenUsing
     {
         private readonly string _key;
@@ -16,6 +20,11 @@ namespace Importify.Service.Logic
         private readonly int _liveTimeRefreshTokenHours;
         private readonly IAuthAccess _access;
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="TokenUsing"/> class.
+        /// </summary>
+        /// <param name="access">The access.</param>
+        /// <param name="config">The configuration.</param>
         public TokenUsing(IAuthAccess access, IConfiguration config)
         {
             _access = access;
@@ -24,6 +33,7 @@ namespace Importify.Service.Logic
             _liveTimeRefreshTokenHours = int.Parse(config.GetSection("LiveTimeRefreshTokenHours").Value);
         }
 
+        /// <inheritdoc/>
         public async Task<Tokens> Refresh(Tokens tokenApiModel)
         {
             var accessToken = tokenApiModel.AccessToken;
@@ -51,6 +61,7 @@ namespace Importify.Service.Logic
             };
         }
 
+        /// <inheritdoc/>
         public async Task<bool> CheckAccessKey(string token)
         {
             try

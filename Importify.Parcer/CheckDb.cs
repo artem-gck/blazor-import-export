@@ -1,17 +1,18 @@
 ﻿using Importify.Access.Context;
 using Importify.Access.Entities;
-using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
 using System.Globalization;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Parcer
 {
+    /// <summary>
+    /// Class for working with data base.
+    /// </summary>
     public static class CheckDb
     {
+        /// <summary>
+        /// Sets the countries.
+        /// </summary>
+        /// <param name="context">The context.</param>
         public static void SetCountries(ImportifyContext context)
         {
             var countries = new List<Country>()
@@ -93,6 +94,11 @@ namespace Parcer
             context.SaveChanges();
         }
 
+        /// <summary>
+        /// Sets the common export.
+        /// </summary>
+        /// <param name="context">The context.</param>
+        /// <param name="path">The path.</param>
         public static void SetCommonExport(ImportifyContext context, string path)
         {
             var countries = new Dictionary<string, string>();
@@ -126,6 +132,11 @@ namespace Parcer
             context.SaveChanges();
         }
 
+        /// <summary>
+        /// Sets the common import.
+        /// </summary>
+        /// <param name="context">The context.</param>
+        /// <param name="path">The path.</param>
         public static void SetCommonImport(ImportifyContext context, string path)
         {
             var countries = new Dictionary<string, string>();
@@ -159,6 +170,12 @@ namespace Parcer
             context.SaveChanges();
         }
 
+        /// <summary>
+        /// Sets the category import.
+        /// </summary>
+        /// <param name="context">The context.</param>
+        /// <param name="category">The category.</param>
+        /// <param name="path">The path.</param>
         public static void SetCategoryImport(ImportifyContext context, string category, string path)
         {
             var countries = new Dictionary<string, string>();
@@ -210,6 +227,12 @@ namespace Parcer
             context.SaveChanges();
         }
 
+        /// <summary>
+        /// Sets the category export.
+        /// </summary>
+        /// <param name="context">The context.</param>
+        /// <param name="category">The category.</param>
+        /// <param name="path">The path.</param>
         public static void SetCategoryExport(ImportifyContext context, string category, string path)
         {
             var countries = new Dictionary<string, string>();

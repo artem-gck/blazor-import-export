@@ -1,22 +1,27 @@
 ﻿using AutoMapper;
 using Importify.Access;
 using Importify.Service.Models;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Importify.Service.Logic
 {
+    /// <summary>
+    /// Class for massages logic.
+    /// </summary>
+    /// <seealso cref="Importify.Service.IMassageUsing" />
     public class MassageUsing : IMassageUsing
     {
         private readonly IMassageAccess _massageAccess;
         private readonly IAuthAccess _authAccess;
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="MassageUsing"/> class.
+        /// </summary>
+        /// <param name="massageAccess">The massage access.</param>
+        /// <param name="authAccess">The authentication access.</param>
         public MassageUsing(IMassageAccess massageAccess, IAuthAccess authAccess)
             => (_massageAccess, _authAccess) = (massageAccess, authAccess);
 
+        /// <inheritdoc/>
         public async Task<int> AddMassageAsync(Massage massage)
         {
             var massageModel = await Maping(massage);
@@ -24,6 +29,7 @@ namespace Importify.Service.Logic
             return await _massageAccess.AddMassageAsync(massageModel);
         }
 
+        /// <inheritdoc/>
         public async Task<int> DeleteMassageAsync(Massage massage)
         {
             var massageModel = await Maping(massage);
@@ -31,6 +37,7 @@ namespace Importify.Service.Logic
             return await _massageAccess.DeleteMassageAsync(massageModel);
         }
 
+        /// <inheritdoc/>
         public async Task<List<Massage>> GetMassagesAsync()
         {
             var massages = await _massageAccess.GetMassagesAsync();
