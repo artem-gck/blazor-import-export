@@ -43,7 +43,7 @@ namespace Importify.Service.Logic
             var claims = new List<Claim>
             {
                 new Claim(ClaimTypes.Name, userData.Login),
-                new Claim(ClaimTypes.Role, "Manager")
+                new Claim(ClaimTypes.Role, userData.UserInfo.Position)
             };
 
             var accessToken = GenerateAccessToken(claims);

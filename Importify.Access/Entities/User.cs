@@ -14,5 +14,6 @@ namespace Importify.Access.Entities
         public string? RefreshToken { get; set; }
         public DateTime? RefreshTokenExpiryTime { get; set; }
         public UserInfo? UserInfo { get; set; }
+        public List<Massage>? Massages { get; set; } 
     }
 }

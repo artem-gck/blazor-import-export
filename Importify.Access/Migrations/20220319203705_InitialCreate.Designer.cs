@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Importify.Access.Migrations
 {
     [DbContext(typeof(ImportifyContext))]
-    [Migration("20220319184914_InitialCreate")]
+    [Migration("20220319203705_InitialCreate")]
     partial class InitialCreate
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -181,6 +181,28 @@ namespace Importify.Access.Migrations
                     b.ToTable("Countries");
                 });
 
+            modelBuilder.Entity("Importify.Access.Entities.Massage", b =>
+                {
+                    b.Property<int>("MassageId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("MassageId"), 1L, 1);
+
+                    b.Property<string>("MassageText")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int?>("UserId")
+                        .HasColumnType("int");
+
+                    b.HasKey("MassageId");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("Massages");
+                });
+
             modelBuilder.Entity("Importify.Access.Entities.User", b =>
                 {
                     b.Property<int>("UserId")
@@ -321,6 +343,15 @@ namespace Importify.Access.Migrations
                     b.Navigation("Year");
                 });
 
+            modelBuilder.Entity("Importify.Access.Entities.Massage", b =>
+                {
+                    b.HasOne("Importify.Access.Entities.User", "User")
+                        .WithMany("Massages")
+                        .HasForeignKey("UserId");
+
+                    b.Navigation("User");
+                });
+
             modelBuilder.Entity("Importify.Access.Entities.UserInfo", b =>
                 {
                     b.HasOne("Importify.Access.Entities.User", "User")
@@ -352,6 +383,8 @@ namespace Importify.Access.Migrations
 
             modelBuilder.Entity("Importify.Access.Entities.User", b =>
                 {
+                    b.Navigation("Massages");
+
                     b.Navigation("UserInfo");
                 });
 

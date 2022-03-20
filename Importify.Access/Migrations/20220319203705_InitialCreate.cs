@@ -68,6 +68,25 @@ namespace Importify.Access.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "Massages",
+                columns: table => new
+                {
+                    MassageId = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    MassageText = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    UserId = table.Column<int>(type: "int", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Massages", x => x.MassageId);
+                    table.ForeignKey(
+                        name: "FK_Massages_Users_UserId",
+                        column: x => x.UserId,
+                        principalTable: "Users",
+                        principalColumn: "UserId");
+                });
+
+            migrationBuilder.CreateTable(
                 name: "UserInfos",
                 columns: table => new
                 {
@@ -251,6 +270,11 @@ namespace Importify.Access.Migrations
                 column: "YearId");
 
             migrationBuilder.CreateIndex(
+                name: "IX_Massages_UserId",
+                table: "Massages",
+                column: "UserId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_UserInfos_UserId",
                 table: "UserInfos",
                 column: "UserId",
@@ -270,6 +294,9 @@ namespace Importify.Access.Migrations
 
             migrationBuilder.DropTable(
                 name: "CommonImports");
+
+            migrationBuilder.DropTable(
+                name: "Massages");
 
             migrationBuilder.DropTable(
                 name: "UserInfos");

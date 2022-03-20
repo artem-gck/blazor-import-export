@@ -27,6 +27,7 @@ namespace Importify.Access.Context
         public DbSet<CategoryImport> CategoryImports { get; set; } = null!;
         public DbSet<User> Users { get; set; } = null!;
         public DbSet<UserInfo> UserInfos { get; set; } = null!;
+        public DbSet<Massage> Massages { get; set; } = null!;
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {

@@ -11,9 +11,7 @@ namespace Importify.Controllers
         private readonly ITokenUsing _service;
 
         public TokenController(ITokenUsing tokenService)
-        {
-            _service = tokenService ?? throw new ArgumentNullException(nameof(tokenService));
-        }
+            => _service = tokenService;
 
         [HttpPost]
         [Route("refresh")]
