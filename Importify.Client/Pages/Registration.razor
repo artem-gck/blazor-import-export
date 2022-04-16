@@ -1,4 +1,7 @@
 ﻿@page "/registration"
+@using Importify.Client.Model
+@using Importify.Client.Service
+@inject NavigationManager NavManager
 
 <PageTitle>Регистрация</PageTitle>
 
@@ -27,18 +30,32 @@
         </div>
     </div>
     <div class="buttonPlace">
-        <button class="acceptButton" @onclick="SendData1">Создать аккаунт</button>
+        <button class="acceptButton" @onclick="@(e => SendData1())">Создать аккаунт</button>
     </div>
 </div>
 
 @code {
+    [Inject]
+    private IAuthService _authService { get; set; }
+
     private string Email { get; set; }
     private string Login { get; set; }
     private string Password { get; set; }
     private string AnotherPassword { get; set; }
 
-    private void SendData1()
-    {
+    private const string Position = "user";
 
+    private async Task SendData1()
+    {
+        var model = new RegistrationUser()
+        {
+            Login = Login,
+            Password = Password,
+            Email = Email,
+            Position = Position
+        };
+
+        if (await _authService.Registration(model) != -1)
+            NavManager.NavigateTo("/");
     }
 }

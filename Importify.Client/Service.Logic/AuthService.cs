@@ -31,6 +31,15 @@ namespace Importify.Client.Service.Logic
             return tokens;
         }
 
+        public async Task<int> Registration(RegistrationUser user)
+        {
+            var response = await _httpClient.PostAsJsonAsync("authentication", user);
+            var responseString = await response.Content.ReadAsStringAsync();
 
+            if (int.TryParse(responseString, out int idOfUser))
+                return idOfUser;
+            else
+                return -1;
+        }
     }
 }
