@@ -17,9 +17,15 @@ namespace Importify.Controllers
             => (_authService, _tokenService, _headerName) = (authService, tokenService, configuration.GetSection("HeaderName").Value);
 
         [HttpPost("login")]
-        public async Task<ActionResult<Tokens>> Login([FromBody] User loginModel)
+        public async Task<ActionResult<Tokens>> Login([FromBody] LoginUser loginModel)
         {
-            var tokens = await _authService.LoginAsync(loginModel);
+            var user = new User()
+            {
+                Login = loginModel.Login,
+                Password = loginModel.Password,
+            };
+
+            var tokens = await _authService.LoginAsync(user);
 
             if (tokens is null)
                 return Unauthorized();
@@ -37,8 +43,24 @@ namespace Importify.Controllers
         }
 
         [HttpPost]
-        public async Task<ActionResult<int>> RegistrationAsync(User user)
-            => await _authService.RegistrationAsync(user);
+        public async Task<ActionResult<int>> RegistrationAsync(RegistrationUser userView)
+        {
+            var userInfo = new UserInfo()
+            {
+                Email = userView.Email,
+                Position = userView.Position,
+            };
+
+            var user = new User()
+            {
+                Login = userView.Login,
+                Password = userView.Password
+            };
+
+            user.UserInfo = userInfo;
+
+            return await _authService.RegistrationAsync(user);
+        }
 
         [HttpPut]
         public async Task<ActionResult<int>> UpdateUserAsync(User user)

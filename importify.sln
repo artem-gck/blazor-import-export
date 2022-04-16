@@ -15,6 +15,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Importify.Server", "Importi
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Importify.Parcer", "Importify.Parcer\Importify.Parcer.csproj", "{4DBAA421-4587-4034-A493-2CBB69E2F27F}"
 EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Importify.Client", "Importify.Client\Importify.Client.csproj", "{23D42D6B-D939-40A8-8F63-6CCA1688BDBC}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -45,6 +47,10 @@ Global
 		{4DBAA421-4587-4034-A493-2CBB69E2F27F}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{4DBAA421-4587-4034-A493-2CBB69E2F27F}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{4DBAA421-4587-4034-A493-2CBB69E2F27F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{23D42D6B-D939-40A8-8F63-6CCA1688BDBC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{23D42D6B-D939-40A8-8F63-6CCA1688BDBC}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{23D42D6B-D939-40A8-8F63-6CCA1688BDBC}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{23D42D6B-D939-40A8-8F63-6CCA1688BDBC}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

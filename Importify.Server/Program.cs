@@ -21,6 +21,8 @@ builder.Services.AddTransient<IAuthAccess, AuthAccess>();
 builder.Services.AddTransient<IPlotAccess, PlotAccess>();
 builder.Services.AddTransient<IMassageAccess, MassageAccess>();
 
+builder.Services.AddCors();
+
 builder.Services.AddMvc();
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
@@ -34,6 +36,13 @@ if (app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 app.UseRouting();
+
+app.UseCors(options =>
+            options.AllowAnyOrigin()
+                   .AllowAnyMethod()
+                   .AllowAnyHeader()
+                   );
+
 app.UseAuthorization();
 
 app.MapControllers();

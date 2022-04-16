@@ -1,0 +1,44 @@
+﻿@page "/registration"
+
+<PageTitle>Регистрация</PageTitle>
+
+<div class="loginPage">
+    <div class="loginHeader">
+        <h2 class="loginText">Регистрация</h2>
+        <br/>
+        <h4 class="loginText comm">Для регистрации в приложении необходимо ввести следующие данные</h4>
+    </div>
+    <div class="loginForm">
+        <br/>
+        <p class="formText">Электронная почта</p>
+        <input class="input" type="text" @bind="@Email"/>
+        <br/>
+        <p class="formText">Логин</p>
+        <input class="input" type="text" @bind="@Login"/>
+        <br/>
+        <p class="formText">Пароль</p>
+        <input class="input" type="password" @bind="@Password"/>
+        <br/>
+        <p class="formText">Повторите пароль</p>
+        <input class="input" type="password" @bind="@AnotherPassword"/>
+        <br/>
+        <div class="forgotPasswordPlace">
+            <a href="/login" class="registrationLink">Уже есть аккаунт?</a>
+        </div>
+    </div>
+    <div class="buttonPlace">
+        <button class="acceptButton" @onclick="SendData1">Создать аккаунт</button>
+    </div>
+</div>
+
+@code {
+    private string Email { get; set; }
+    private string Login { get; set; }
+    private string Password { get; set; }
+    private string AnotherPassword { get; set; }
+
+    private void SendData1()
+    {
+
+    }
+}

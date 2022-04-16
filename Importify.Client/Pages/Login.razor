@@ -1,0 +1,76 @@
+﻿@page "/login"
+@using Importify.Client.Model
+@using Importify.Client.Service
+@using Microsoft.AspNetCore.Http
+@using Newtonsoft.Json
+@using System.Net.Http.Headers
+@using System.Security.Claims
+@inject Microsoft.AspNetCore.Http.IHttpContextAccessor _httpContext
+@inject Blazored.LocalStorage.ILocalStorageService localStorage
+@inject NavigationManager NavManager
+
+<PageTitle>Вход</PageTitle>
+
+<div class="loginPage">
+    <div class="loginHeader">
+        <h2 class="loginText">Вход в аккаунт</h2>
+        <br/>
+        <h4 class="loginText comm">Выполните вход в приложение, используя логин и пароль</h4>
+    </div>
+    <div class="loginForm">
+        <br/>
+        <p class="formText">Логин</p>
+        <input class="input" type="text" @bind="@Login1"/>
+        <br/>
+        <p class="formText">Пароль</p>
+        <input class="input" type="password" @bind="@Password1"/>
+        <br/>
+        <div class="forgotPasswordPlace">
+            <a href="#" class="forgotPassword">Забыли пароль?</a>
+            <br/>
+            <a href="/registration" class="registrationLink">Нет аккаунта?</a>
+        </div>
+    </div>
+    <div class="buttonPlace">
+        <button class="acceptButton" @onclick="@(e => SendData())">Вход в аккаунт</button>
+    </div>
+</div>
+
+@code {
+    [Inject]
+    private IAuthService _authService { get; set; }
+
+    private string Login1 { get; set; }
+    private string Password1 { get; set; }
+
+    private async Task SendData()
+    {
+        var model = new LoginUser()
+        {
+            Login = Login1,
+            Password = Password1,
+        };
+
+        var tokens = await _authService.Login(model);
+        await Authenticate(tokens);
+        NavManager.NavigateTo("/");
+    }
+
+    private async Task Authenticate(Tokens model)
+    {
+        await localStorage.SetItemAsync("access_token", model.AccessToken);
+        await localStorage.SetItemAsync("refresh_token", model.RefreshToken);
+
+
+        //var cookieContent = await localStorage.GetItemAsync<string>("cookieName");
+
+        //if (cookieContent == null)
+        //{
+        //    Console.WriteLine("Cookie is blank");
+        //}
+        //else
+        //{
+        //    Console.WriteLine("We have a cookie with contents: " + cookieContent);
+        //}
+    }
+}
