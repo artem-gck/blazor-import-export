@@ -1,12 +1,19 @@
 ﻿<div class="links">
     <div class="linkLeft">
-        <a class="link" href="countryes">
+        <a class="link" style="@(state ? selectColor : normalColor)" @onclick="e => state = true" href="countryes">
             Страны
         </a>
     </div>
     <div class="linkLeft">
-        <a class="link" href="category">
+        <a class="link" style="@(state ? normalColor : selectColor)" @onclick="e => state = false" href="category">
             Категории
         </a>
     </div>
 </div>
+
+@code {
+    private bool state = true;
+
+    private string normalColor = "color: #72778E";
+    private string selectColor = "color: #354385";
+}

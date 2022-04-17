@@ -1,0 +1,50 @@
+﻿<div class="content">
+    <div>
+        <div class="title">Направления экспорта продукции</div>
+        <br/>
+        <br/>
+        <div class="text">Диаграммы импорта и экспорта продукции отражают стуктуру экспорта страны по данным за выбранный год. <br/>Информация представлена в виде круговых диаграмм. Для просмотра необходимо выбрать страну и год в выпадающих списках.</div>
+        <br/>
+        <br/>
+        <select class="select" @bind="nameOfCountry">
+                @if (listOfCountry != null)
+                {
+                    @foreach (var country in listOfCountry)
+                    {
+                        <option value="@country.Name">@country.Name</option>
+                    }
+                }
+        </select>
+        <select class="select" @bind="valueOfYear">
+                @if (listOfYear != null)
+                {
+                    @foreach (var year in listOfYear)
+                    {
+                        <option value="@year.Value">@year.Value</option>
+                    }
+                }
+        </select>
+    </div>
+    <div>
+        <button>Показать график</button>
+    </div>
+</div>
+
+@code {
+    [Inject]
+    private IBasicService _basicService { get; set; }
+
+    private string nameOfCountry;
+    private int valueOfYear;
+    private List<Country> listOfCountry;
+    private List<Year> listOfYear;
+
+    protected override async Task OnInitializedAsync()
+    {
+        listOfCountry = await _basicService.GetCountryes();
+        listOfYear = await _basicService.GetYears();
+
+        if (listOfCountry is null || listOfYear is null)
+            NavManager.NavigateTo("/login");
+    }
+}

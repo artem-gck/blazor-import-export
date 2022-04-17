@@ -4,8 +4,8 @@
 <div class="col-12 col-sm-12 col-md-6 col-lg-6 col-xl-6 leftSide">
     <div class="leftSideInside">
         <div>
-            <button class="selectedItem" @onclick="e => leftState = true">Общие импорт и экспорт</button>
-            <button class="selectedItem" @onclick="e => leftState = false">Импорт и экспорт по категориям</button>
+            <button class="selectedItem" style="@(leftState ? selectColor : normalColor)" @onclick="e => leftState = true">Общие импорт и экспорт</button>
+            <button class="selectedItem" style="@(leftState ? normalColor : selectColor)" @onclick="e => leftState = false">Импорт и экспорт по категориям</button>
         </div>
         <br/>
         <br/>
@@ -24,8 +24,8 @@
 <div class="col-12 col-sm-12 col-md-6 col-lg-6 col-xl-6 leftSide">
     <div class="leftSideInside">
         <div>
-            <button class="selectedItem" @onclick="e => rightState = true">Общие импорт и экспорт</button>
-            <button class="selectedItem" @onclick="e => rightState = false">Статистика по категориям</button>
+            <button class="selectedItem" style="@(rightState ? selectColor : normalColor)" @onclick="e => rightState = true">Общие импорт и экспорт</button>
+            <button class="selectedItem" style="@(rightState ? normalColor : selectColor)" @onclick="e => rightState = false">Статистика по категориям</button>
         </div>
         <br/>
         <br/>
@@ -36,7 +36,7 @@
             }
             else
             {
-                <span>right</span>
+                <CategoryExport />
             }
         </div>
     </div>
@@ -45,4 +45,7 @@
 @code {
     private bool leftState = true;
     private bool rightState = true;
+
+    private string normalColor = "color: #72778E";
+    private string selectColor = "color: #354385";
 }

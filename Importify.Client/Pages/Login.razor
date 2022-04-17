@@ -46,24 +46,12 @@
 
         var tokens = await _authService.Login(model);
         await Authenticate(tokens);
-        NavManager.NavigateTo("/");
+        NavManager.NavigateTo("/countryes");
     }
 
     private async Task Authenticate(Tokens model)
     {
         await localStorage.SetItemAsync("access_token", model.AccessToken);
         await localStorage.SetItemAsync("refresh_token", model.RefreshToken);
-
-
-        //var cookieContent = await localStorage.GetItemAsync<string>("cookieName");
-
-        //if (cookieContent == null)
-        //{
-        //    Console.WriteLine("Cookie is blank");
-        //}
-        //else
-        //{
-        //    Console.WriteLine("We have a cookie with contents: " + cookieContent);
-        //}
     }
 }
