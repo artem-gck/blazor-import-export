@@ -4,15 +4,35 @@
 <div class="col-12 col-sm-12 col-md-6 col-lg-6 col-xl-6 leftSide">
     <div class="leftSideInside">
         <div>
-            <button class="selectedItem" @onclick="e => state = true">Общие импорт и экспорт</button>
-            <button class="selectedItem" @onclick="e => state = false">Импорт и экспорт по категориям</button>
+            <button class="selectedItem" @onclick="e => leftState = true">Общие импорт и экспорт</button>
+            <button class="selectedItem" @onclick="e => leftState = false">Импорт и экспорт по категориям</button>
         </div>
         <br/>
         <br/>
         <div class="con">
-            @if (state)
+            @if (leftState)
             {
                 <TotalImportExport />
+            }
+            else
+            {
+                <CategoryImportExport />
+            }
+        </div>
+    </div>
+</div>
+<div class="col-12 col-sm-12 col-md-6 col-lg-6 col-xl-6 leftSide">
+    <div class="leftSideInside">
+        <div>
+            <button class="selectedItem" @onclick="e => rightState = true">Общие импорт и экспорт</button>
+            <button class="selectedItem" @onclick="e => rightState = false">Статистика по категориям</button>
+        </div>
+        <br/>
+        <br/>
+        <div class="con">
+            @if (rightState)
+            {
+                <ImportExportPlot />
             }
             else
             {
@@ -21,10 +41,8 @@
         </div>
     </div>
 </div>
-<div class="col-12 col-sm-12 col-md-6 col-lg-6 col-xl-6 rightSide">
-    right
-</div>
 
 @code {
-    private bool state = true;
+    private bool leftState = true;
+    private bool rightState = true;
 }

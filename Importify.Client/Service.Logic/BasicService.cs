@@ -57,6 +57,39 @@ namespace Importify.Client.Service.Logic
             return countries;
         }
 
+        public async Task<List<Year>> GetYears()
+        {
+            string responseString;
+            List<Year> years;
+
+            var cookieContent = await _storageService.GetItemAsync<string>("access_token");
+
+            if (cookieContent is null)
+                return null;
+
+            _httpClient.DefaultRequestHeaders.Add("access_token", cookieContent);
+
+            var response = await _httpClient.GetAsync("basic/years");
+
+            if ((int)response.StatusCode == 401)
+            {
+                if (await SendRefreshToken(cookieContent) == -1)
+                    return null;
+
+                response = await _httpClient.GetAsync("basic/years");
+
+                responseString = await response.Content.ReadAsStringAsync();
+                years = JsonConvert.DeserializeObject<List<Year>>(responseString);
+
+                return years;
+            }
+
+            responseString = await response.Content.ReadAsStringAsync();
+            years = JsonConvert.DeserializeObject<List<Year>>(responseString);
+
+            return years;
+        }
+
         private async Task<int> SendRefreshToken(string cookieContent)
         {
             var tok = new Tokens()
