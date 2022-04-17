@@ -30,5 +30,10 @@
     private List<Country> listOfCountry;
 
     protected override async Task OnInitializedAsync()
-        => listOfCountry = await _basicService.GetCountryes();
+    {
+        listOfCountry = await _basicService.GetCountryes();
+
+        if (listOfCountry is null)
+            NavManager.NavigateTo("/login");
+    }
 }
