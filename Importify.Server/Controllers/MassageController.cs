@@ -8,21 +8,38 @@ namespace Importify.Controllers
     [ApiController]
     public class MassageController : Controller
     {
-        private readonly IMassageUsing _massageUsing;
+        private readonly IMassageUsing _massageService;
+        private readonly ITokenUsing _tokenService;
+        private readonly string _headerName;
 
-        public MassageController(IMassageUsing massageService)
-            => _massageUsing = massageService;
+        public MassageController(IMassageUsing massageService, ITokenUsing tokenService, IConfiguration configuration)
+            => (_massageService, _tokenService, _headerName) = (massageService, tokenService, configuration.GetSection("HeaderName").Value);
 
         [HttpGet]
         public async Task<ActionResult<List<Massage>>> GetMassagesAsync()
-            => await _massageUsing.GetMassagesAsync();
+        {
+            if (await _tokenService.CheckAccessKey(Request.Headers[_headerName].ToString()))
+                return await _massageService.GetMassagesAsync();
+            else
+                return Unauthorized();
+        }
 
         [HttpPost]
         public async Task<ActionResult<int>> AddMassageAsync(Massage massage)
-            => await _massageUsing.AddMassageAsync(massage);
+        {
+            if (await _tokenService.CheckAccessKey(Request.Headers[_headerName].ToString()))
+                return await _massageService.AddMassageAsync(massage);
+            else
+                return Unauthorized();
+        }
 
         [HttpDelete]
         public async Task<ActionResult<int>> DeleteMassageAsync(Massage massage)
-            => await _massageUsing.DeleteMassageAsync(massage);
+        {
+            if (await _tokenService.CheckAccessKey(Request.Headers[_headerName].ToString()))
+                return await _massageService.DeleteMassageAsync(massage);
+            else
+                return Unauthorized();
+        }
     }
 }

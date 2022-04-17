@@ -1,0 +1,34 @@
+﻿<div class="content">
+    <div>
+        <div class="title">Сводная таблица импорта и экспорта продукции</div>
+        <br/>
+        <br/>
+        <div class="text">Сводная таблица импорта и экспорта страны позволяет отследить показатели сумм стоимости всех экспортированных и импортированных товаров за последние 10 лет. Данные представляются в виде таблицы. Для просмотра необходимо выбрать страну в выпадающем списке</div>
+        <br/>
+        <br/>
+        <select class="select" @bind="nameOfCountry">
+                @if (listOfCountry != null)
+                {
+                    @foreach (var country in listOfCountry)
+                    {
+                        <option value="@country.Name">@country.Name</option>
+                    }
+                }
+        </select>
+    </div>
+    <div>
+        <button>Показать таблицу</button>
+        <button>Изменить данные</button>
+    </div>
+</div>
+
+@code {
+    [Inject]
+    private IBasicService _basicService { get; set; }
+
+    private string nameOfCountry;
+    private List<Country> listOfCountry;
+
+    protected override async Task OnInitializedAsync()
+        => listOfCountry = await _basicService.GetCountryes();
+}

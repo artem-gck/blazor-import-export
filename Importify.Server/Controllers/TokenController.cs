@@ -8,10 +8,10 @@ namespace Importify.Controllers
     [ApiController]
     public class TokenController : Controller
     {
-        private readonly ITokenUsing _service;
+        private readonly ITokenUsing _tokenService;
 
         public TokenController(ITokenUsing tokenService)
-            => _service = tokenService;
+            => _tokenService = tokenService;
 
         [HttpPost]
         [Route("refresh")]
@@ -20,7 +20,7 @@ namespace Importify.Controllers
             if (tokenApiModel is null)
                 return BadRequest("Invalid client request");
 
-            var newTokens = await _service.Refresh(tokenApiModel);
+            var newTokens = await _tokenService.Refresh(tokenApiModel);
 
             return newTokens is not null ? newTokens : NotFound();
         }

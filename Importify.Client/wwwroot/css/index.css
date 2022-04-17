@@ -2,8 +2,16 @@
     height: 100%;
 }
 
+.cu {
+    height: 90%;
+}
+
 .cut {
     height: 97%;
+}
+
+footer {
+    padding-left: 10px;
 }
 
 .center-block {
@@ -46,8 +54,6 @@ img {
     height: 70%;
     width: 70%;
 }
-
-
 
 .loginText {
     color: #fafafa;
@@ -93,6 +99,17 @@ img {
     width: 50%;
 }
 
+.accauntButton {
+    background-color: #354385;
+    border: 0px;
+    border-radius: 27px;
+    height: 35px;
+    font: 18px sans-serif;
+    font-family: "SF Compact Text", sans-serif;
+    color: white;
+    width: 250px;
+}
+
 .buttonPlace {
     width: 100%;
     text-align: center;
@@ -136,4 +153,93 @@ a.registrationLink {
     font: 16px sans-serif;
     font-family: "SF Compact Text", sans-serif;
     color: white;
+}
+
+.mainDiv {
+    background-color: #F2F3F7;
+    height: 100%;
+}
+
+header {
+    background-color: #F2F3F7;
+    display: flex;
+    justify-content: space-around;
+}
+
+.links {
+    display: flex;
+    width: 50%;
+}
+
+.buttonP {
+    display: flex;
+    justify-content: flex-end;
+    width: 50%;
+}
+
+.link:active,
+.link:hover,
+.link {
+    text-decoration: none;
+    font: 24px sans-serif;
+    font-family: "SF Compact Text", sans-serif;
+    color: #72778E;
+}
+
+.linkLeft {
+    margin-top: 2%;
+    margin-bottom: 2%;
+    margin-left: 5%;
+}
+
+.linkRight {
+    margin-top: 2%;
+    margin-bottom: 2%;
+    margin-right: 5%;
+    font: 24px sans-serif;
+    font-family: "SF Compact Text", sans-serif;
+    color: #72778E;
+}
+
+.rightSpan {
+    
+}
+
+hr {
+    border: none;
+    background-color: gray;
+    color: black;
+    margin: 0px;
+}
+
+.leftSide {
+    height: 80%;    
+}
+
+.leftSideInside {
+    height: 100%;
+    width: 80%;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.rightSide {
+    height: 100%;
+    -webkit-box-align: center;
+    -webkit-box-pack: center;
+    display: -webkit-box;
+}
+
+.selectedItem {
+    background-color: #F2F3F7;
+    border: 0px;
+    height: 35px;
+    font: 18px sans-serif;
+    font-family: "SF Compact Text", sans-serif;
+    color: #72778E;
+    width: 300px;
+}
+
+.con {
+    height: 75%;
 }

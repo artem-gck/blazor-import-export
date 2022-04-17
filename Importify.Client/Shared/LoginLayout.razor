@@ -1,0 +1,20 @@
+﻿@inherits LayoutComponentBase
+
+<div class="container cut">
+    <div class="row align-items-center">
+        <div class="d-none d-md-block d-xl-block d-lg-block col-md-6 col-lg-6 col-xl-6 left">
+            <img src="image/Left_side.jpg">
+        </div>
+        <div class="col-12 col-sm-12 col-md-6 col-lg-6 col-xl-6 right">
+            <div class="main">
+                @Body
+            </div>
+        </div>
+    </div>
+</div>
+
+<footer class="border-top footer text-muted">
+    <div class="container">
+        &copy; @DateTime.Now.Year - Importify - <a href="https://vk.com/artem_gck">Vk</a>
+    </div>
+</footer>

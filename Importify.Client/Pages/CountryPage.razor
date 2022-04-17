@@ -1,0 +1,30 @@
+﻿@page "/countryes"
+@layout MainLayout
+
+<div class="col-12 col-sm-12 col-md-6 col-lg-6 col-xl-6 leftSide">
+    <div class="leftSideInside">
+        <div>
+            <button class="selectedItem" @onclick="e => state = true">Общие импорт и экспорт</button>
+            <button class="selectedItem" @onclick="e => state = false">Импорт и экспорт по категориям</button>
+        </div>
+        <br/>
+        <br/>
+        <div class="con">
+            @if (state)
+            {
+                <TotalImportExport />
+            }
+            else
+            {
+                <span>right</span>
+            }
+        </div>
+    </div>
+</div>
+<div class="col-12 col-sm-12 col-md-6 col-lg-6 col-xl-6 rightSide">
+    right
+</div>
+
+@code {
+    private bool state = true;
+}
