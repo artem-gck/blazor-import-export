@@ -1,12 +1,14 @@
 ﻿<div class="content">
-    <div>
-        <div class="title">График импорта и экспорта продукции</div>
-        <br/>
-        <br/>
-        <div class="text">График истории импорта и экспорта страны отражает динамику изменеия оббъемов экспорта и импорта выбранной страны за последние 10 лет. <br/> Информация представлена в виде графика. Для просмотра необходимо выбрать страну в выпадающем списке.</div>
-        <br/>
-        <br/>
-        <select class="select" @bind="nameOfCountry">
+    @if (stateOfScreen)
+    {
+        <div>
+            <div class="title">График импорта и экспорта продукции</div>
+            <br/>
+            <br/>
+            <div class="text">График истории импорта и экспорта страны отражает динамику изменеия оббъемов экспорта и импорта выбранной страны за последние 10 лет. <br/> Информация представлена в виде графика. Для просмотра необходимо выбрать страну в выпадающем списке.</div>
+            <br/>
+            <br/>
+            <select class="select" @bind="nameOfCountry">
                 @if (listOfCountry != null)
                 {
                     @foreach (var country in listOfCountry)
@@ -14,18 +16,25 @@
                         <option value="@country.Name">@country.Name</option>
                     }
                 }
-        </select>
-    </div>
-    <div>
-        <button>Показать таблицу</button>
-    </div>
+            </select>
+        </div>
+        <div>
+            <button @onclick="async e => await OnButtonClick()">Показать график</button>
+        </div>
+    }
+    else
+    {
+        <ImportExportPlotPlot CountryName="@nameOfCountry" OnClickCallback="@OnButtonClick"/>
+    }
 </div>
 
 @code {
     [Inject]
     private IBasicService _basicService { get; set; }
 
-    private string nameOfCountry;
+    private bool stateOfScreen = true;
+
+    private string nameOfCountry = "Австралия";
     private List<Country> listOfCountry;
 
     protected override async Task OnInitializedAsync()
@@ -34,5 +43,11 @@
 
         if (listOfCountry is null)
             NavManager.NavigateTo("/login");
+    }
+
+    private async Task OnButtonClick()
+    {
+        stateOfScreen = !stateOfScreen;
+        //StateHasChanged();
     }
 }

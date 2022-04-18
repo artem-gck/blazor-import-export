@@ -1,4 +1,5 @@
 using Blazored.LocalStorage;
+using IgniteUI.Blazor.Controls;
 using Importify.Client;
 using Importify.Client.Service;
 using Importify.Client.Service.Logic;
@@ -8,8 +9,12 @@ using Microsoft.AspNetCore.Components.WebAssembly.Hosting;
 var builder = WebAssemblyHostBuilder.CreateDefault(args);
 builder.RootComponents.Add<App>("#app");
 builder.RootComponents.Add<HeadOutlet>("head::after");
+
+builder.Services.AddScoped(typeof(IIgniteUIBlazor), typeof(IgniteUIBlazor));
 builder.Services.AddScoped<IAuthService, AuthService>();
 builder.Services.AddScoped<IBasicService, BasicService>();
+builder.Services.AddScoped<IPlotService, PlotService>();
+
 builder.Services.AddHttpContextAccessor();
 builder.Services.AddBlazoredLocalStorage();
 builder.Services.AddBlazoredLocalStorage(config =>

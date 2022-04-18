@@ -1,0 +1,64 @@
+﻿@using IgniteUI.Blazor.Controls
+@inject IIgniteUIBlazor IgniteUIBlazor
+
+<div>
+    <div class="title">График импорта и экспорта продукции</div>
+    <br/>
+    <br/>
+    <div class="container vertical">
+        <div class="options vertical">
+            <div class="legend">
+                <IgbLegend @ref="Legend" Orientation="LegendOrientation.Horizontal" />
+            </div>
+        </div>
+        <br/>
+        <div class="container vertical">
+            @if (data != null)
+            {
+                <IgbCategoryChart Height="330px" Width="700px"
+                               Legend="Legend"
+                               DataSource="data"
+                               ChartType="CategoryChartType.Area"
+                               YAxisTitle="$"
+                               XAxisTitle="Год"
+						       IsHorizontalZoomEnabled="true"
+                               IsVerticalZoomEnabled="true">
+                </IgbCategoryChart>
+            }
+        </div>
+    </div>
+</div>
+<div>
+    <button>Сохранить</button>
+    <button @onclick="OnClickCallback">Назад</button>
+</div>
+
+@code {
+    [Inject]
+    private IPlotService _plotService { get; set; }
+
+    [Parameter]
+    public EventCallback OnClickCallback { get; set; }
+
+    [Parameter]
+    public string CountryName { get; set; }
+
+    private IgbLegend _Legend;
+    private IgbLegend Legend
+    {
+        get { return _Legend; }
+        set { _Legend = value; StateHasChanged(); }
+    }
+
+    private List<CountryImportExport> data;
+
+    protected override async void OnInitialized()
+    {
+        data = await _plotService.GetCountryImportExportAsync(CountryName);
+
+        StateHasChanged();
+
+        IgbCategoryChartModule.Register(IgniteUIBlazor);
+        IgbLegendModule.Register(IgniteUIBlazor);
+    }
+}

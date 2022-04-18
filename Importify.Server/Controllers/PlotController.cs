@@ -6,7 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace Importify.Controllers
 {
     [ApiController]
-    [Route("api/[controller]")]
+    [Route("api/plot")]
     public class PlotController : Controller
     {
         private readonly IPlotUsing _plotService;
