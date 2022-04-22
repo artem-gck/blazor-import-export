@@ -1,12 +1,14 @@
 ﻿<div class="content">
-    <div>
-        <div class="title">Направления экспорта продукции</div>
-        <br/>
-        <br/>
-        <div class="text">Диаграммы импорта и экспорта продукции отражают стуктуру экспорта страны по данным за выбранный год. <br/>Информация представлена в виде круговых диаграмм. Для просмотра необходимо выбрать страну и год в выпадающих списках.</div>
-        <br/>
-        <br/>
-        <select class="select" @bind="nameOfCountry">
+    @if (stateOfScreen)
+    {
+        <div>
+            <div class="title">Направления экспорта продукции</div>
+            <br/>
+            <br/>
+            <div class="text">Диаграмма экспорта продукции отражают стуктуру экспорта страны по данным за выбранный год. <br/>Информация представлена в виде круговой диаграммы. Для просмотра необходимо выбрать страну и год в выпадающих списках.</div>
+            <br/>
+            <br/>
+            <select class="select" @bind="nameOfCountry">
                 @if (listOfCountry != null)
                 {
                     @foreach (var country in listOfCountry)
@@ -14,8 +16,8 @@
                         <option value="@country.Name">@country.Name</option>
                     }
                 }
-        </select>
-        <select class="select" @bind="valueOfYear">
+            </select>
+            <select class="select" @bind="valueOfYear">
                 @if (listOfYear != null)
                 {
                     @foreach (var year in listOfYear)
@@ -23,19 +25,26 @@
                         <option value="@year.Value">@year.Value</option>
                     }
                 }
-        </select>
-    </div>
-    <div>
-        <button>Показать график</button>
-    </div>
+            </select>
+        </div>
+        <div>
+            <button @onclick="e => OnButtonClick()">Показать диаграмму</button>
+        </div>
+    }
+    else
+    {
+        <CategoryExportPlot CountryName="@nameOfCountry" YearValue="@valueOfYear" OnClickCallback="@OnButtonClick"/>
+    }
 </div>
 
 @code {
     [Inject]
     private IBasicService _basicService { get; set; }
 
-    private string nameOfCountry;
-    private int valueOfYear;
+    private bool stateOfScreen = true;
+
+    private string nameOfCountry = "Австралия";
+    private int valueOfYear = 2009;
     private List<Country> listOfCountry;
     private List<Year> listOfYear;
 
@@ -47,4 +56,7 @@
         if (listOfCountry is null || listOfYear is null)
             NavManager.NavigateTo("/login");
     }
+
+    private async Task OnButtonClick()
+        => stateOfScreen = !stateOfScreen;
 }

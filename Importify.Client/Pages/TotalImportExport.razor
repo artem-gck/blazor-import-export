@@ -1,12 +1,14 @@
 ﻿<div class="content">
-    <div>
-        <div class="title">Сводная таблица импорта и экспорта продукции</div>
-        <br/>
-        <br/>
-        <div class="text">Сводная таблица импорта и экспорта страны позволяет отследить показатели сумм стоимости всех экспортированных и импортированных товаров за последние 10 лет. Данные представляются в виде таблицы. Для просмотра необходимо выбрать страну в выпадающем списке.</div>
-        <br/>
-        <br/>
-        <select class="select" @bind="nameOfCountry">
+    @if (stateOfScreen)
+    {
+        <div>
+            <div class="title">Сводная таблица импорта и экспорта продукции</div>
+            <br/>
+            <br/>
+            <div class="text">Сводная таблица импорта и экспорта страны позволяет отследить показатели сумм стоимости всех экспортированных и импортированных товаров за последние 10 лет. Данные представляются в виде таблицы. Для просмотра необходимо выбрать страну в выпадающем списке.</div>
+            <br/>
+            <br/>
+            <select class="select" @bind="nameOfCountry">
                 @if (listOfCountry != null)
                 {
                     @foreach (var country in listOfCountry)
@@ -14,19 +16,26 @@
                         <option value="@country.Name">@country.Name</option>
                     }
                 }
-        </select>
-    </div>
-    <div>
-        <button>Показать таблицу</button>
-        <button>Изменить данные</button>
-    </div>
+            </select>
+        </div>
+        <div>
+            <button @onclick="e => OnButtonClick()">Показать таблицу</button>
+            <button>Изменить данные</button>
+        </div>
+    }
+    else
+    {
+        <TotalImportExportTable CountryName="@nameOfCountry" OnClickCallback="@OnButtonClick"/>
+    }
 </div>
 
 @code {
     [Inject]
     private IBasicService _basicService { get; set; }
+    
+    private bool stateOfScreen = true;
 
-    private string nameOfCountry;
+    private string nameOfCountry = "Австралия";
     private List<Country> listOfCountry;
 
     protected override async Task OnInitializedAsync()
@@ -36,4 +45,7 @@
         if (listOfCountry is null)
             NavManager.NavigateTo("/login");
     }
+
+    private async Task OnButtonClick()
+        => stateOfScreen = !stateOfScreen;
 }

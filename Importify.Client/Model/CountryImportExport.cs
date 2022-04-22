@@ -8,5 +8,6 @@ namespace Importify.Client.Model
         public string Year { get; set; }
         public decimal ImportValue { get; set; }
         public decimal ExportValue { get; set; }
+        public decimal NetExportValue { get; set; }
     }
 }

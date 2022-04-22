@@ -11,7 +11,6 @@
     <link href="Importify.Client.styles.css" rel="stylesheet" />
     <link href="css/index.css" rel="stylesheet" />
 </head>
-
 <body>
     <div id="app">Loading...</div>
 
@@ -21,7 +20,26 @@
         <a class="dismiss">🗙</a>
     </div>
     <script src="_framework/blazor.webassembly.js"></script>
-    <script src="_content/IgniteUI.Blazor/app.bundle.js"></script> 
+    <script src="_content/IgniteUI.Blazor/app.bundle.js"></script>
+    <script>
+        async function downloadFileFromStream(fileName, contentStreamReference) {
+            const arrayBuffer = await contentStreamReference.arrayBuffer();
+            const blob = new Blob([arrayBuffer]);
+            const url = URL.createObjectURL(blob);
+
+            triggerFileDownload(fileName, url);
+
+            URL.revokeObjectURL(url);
+        }
+
+        function triggerFileDownload(fileName, url) {
+            const anchorElement = document.createElement('a');
+            anchorElement.href = url;
+            anchorElement.download = fileName ?? '';
+            anchorElement.click();
+            anchorElement.remove();
+        }
+    </script>
 </body>
 
 </html>

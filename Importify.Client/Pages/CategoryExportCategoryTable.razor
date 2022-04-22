@@ -1,0 +1,50 @@
+﻿@using IgniteUI.Blazor.Controls
+@inject IIgniteUIBlazor IgniteUIBlazor
+
+<div>
+    <div class="title">Направления импорта и экспорта</div>
+    <br/>
+    <br/>
+    <div class="container vertical">
+        <div class="container vertical" style="--use-accessibility:true;">
+            @if (data != null)
+            {
+                <div style="overflow: hidden">
+                    <IgbDataGrid Height="360px" Width="700px"
+                            DataSource="data"
+                            AutoGenerateColumns="false">
+                        <IgbNumericColumn Field="Year" HeaderText="Год" Width="@("*>100")" PositiveSuffix=" г." NegativeSuffix=" г." MaxFractionDigits="0" MinFractionDigits="0" HorizontalAlignment="CellContentHorizontalAlignment.Center" />
+                        <IgbTextColumn Field="Constituent" Width="@("*>100")" HeaderText="Категория" HorizontalAlignment="CellContentHorizontalAlignment.Center" />
+                        <IgbNumericColumn Field="Value" HeaderText="Экспорт" Width="@("*>100")" PositiveSuffix=" $" NegativeSuffix=" $" ShowGroupingSeparator="true" MaxFractionDigits="0" MinFractionDigits="0" HorizontalAlignment="CellContentHorizontalAlignment.Center" />
+                    </IgbDataGrid>
+                </div>
+            }
+        </div>
+    </div>
+</div>
+<div>
+    <button>Сохранить</button>
+    <button @onclick="OnClickCallback">Назад</button>
+</div>
+
+@code {
+    [Inject]
+    private IPlotService _plotService { get; set; }
+
+    [Parameter]
+    public EventCallback OnClickCallback { get; set; }
+
+    [Parameter]
+    public string CountryName { get; set; }
+
+    private List<CountryConstituent> data;
+
+    protected override async void OnInitialized()
+    {
+        data = await _plotService.GetCountryConstituentExportAsync(CountryName);
+
+        StateHasChanged();
+
+        IgbDataGridModule.Register(IgniteUIBlazor);
+    }
+}

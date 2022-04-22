@@ -2,10 +2,10 @@
     @if (stateOfScreen)
     {
         <div>
-            <div class="title">График импорта и экспорта продукции</div>
+            <div class="title">Направления импорта и экспорта</div>
             <br/>
             <br/>
-            <div class="text">График истории импорта и экспорта страны отражает динамику изменеия оббъемов экспорта и импорта выбранной страны за последние 10 лет. <br/> Информация представлена в виде графика. Для просмотра необходимо выбрать страну в выпадающем списке.</div>
+            <div class="text">Таблица импорта и экспорта по категориям отображает показатели импорта и экспорта по отдельности на каждой категории. <br/>Данные представлены в виде таблицы. Для просмотра данных необходимо выбрать страну в выпадающем меню.</div>
             <br/>
             <br/>
             <select class="select" @bind="nameOfCountry">
@@ -19,12 +19,12 @@
             </select>
         </div>
         <div>
-            <button @onclick="async e => await OnButtonClick()">Показать график</button>
+            <button @onclick="e => OnButtonClick()">Показать таблицу</button>
         </div>
     }
     else
     {
-        <ImportExportPlotPlot CountryName="@nameOfCountry" OnClickCallback="@OnButtonClick"/>
+        <CategoryExportCategoryTable CountryName="@nameOfCountry" OnClickCallback="@OnButtonClick"/>
     }
 </div>
 

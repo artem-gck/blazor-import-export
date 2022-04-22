@@ -14,6 +14,7 @@ builder.Services.AddScoped(typeof(IIgniteUIBlazor), typeof(IgniteUIBlazor));
 builder.Services.AddScoped<IAuthService, AuthService>();
 builder.Services.AddScoped<IBasicService, BasicService>();
 builder.Services.AddScoped<IPlotService, PlotService>();
+builder.Services.AddScoped<IExcelGenerator, ExcelGenerator>();
 
 builder.Services.AddHttpContextAccessor();
 builder.Services.AddBlazoredLocalStorage();

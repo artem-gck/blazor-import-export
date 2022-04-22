@@ -1,0 +1,82 @@
+﻿@using IgniteUI.Blazor.Controls
+@inject IIgniteUIBlazor IgniteUIBlazor
+
+<div>
+    <div class="title">Направления экспорта продукции</div>
+    <br/>
+    <br/>
+    <div class="container vertical">
+        <div class="container vertical">
+            @if (data != null)
+            {
+                <IgbDoughnutChart Height="380px" Width="80%" @ref="Chart"
+                AllowSliceExplosion="true" >
+                    <IgbRingSeries DataSource="data"
+                                LabelMemberPath="Summary"
+                                LabelsPosition="LabelsPosition.OutsideEnd"
+                                LabelExtent="30"
+                                ValueMemberPath="Value"
+                                LegendLabelMemberPath="Constituent"
+                                Outlines="white"
+                                RadiusFactor="0.8"
+							    StartAngle="33">
+                    </IgbRingSeries>
+                </IgbDoughnutChart>
+            }
+        </div>
+    </div>
+</div>
+<div>
+    <button>Сохранить</button>
+    <button @onclick="OnClickCallback">Назад</button>
+</div>
+
+@code {
+    [Inject]
+    private IPlotService _plotService { get; set; }
+
+    [Parameter]
+    public EventCallback OnClickCallback { get; set; }
+
+    [Parameter]
+    public string CountryName { get; set; }
+
+    [Parameter]
+    public int YearValue { get; set; }
+
+    public IgbItemLegend Legend;
+    public IgbDoughnutChart Chart;
+    public List<CountryConstituent> sendData;
+    public List<CountryConstituentPlot> data;
+
+    protected override async void OnInitialized()
+    {
+        sendData = await _plotService.GetCountryConstituentAsync(CountryName, YearValue);
+
+        data = new List<CountryConstituentPlot>();
+
+        foreach (var item in sendData)
+            data.Add(new CountryConstituentPlot()
+            {
+                Value = item.Value,
+                Constituent = item.Constituent
+            });
+
+        StateHasChanged();
+
+        IgbDoughnutChartModule.Register(IgniteUIBlazor);
+        IgbItemLegendModule.Register(IgniteUIBlazor);
+    }
+
+    protected override void OnAfterRender(bool firstRender)
+    {
+        base.OnAfterRender(firstRender);
+
+        if (Chart != null && Legend != null && !firstRender)
+            this.Chart.ActualSeries[0].Legend = Legend;
+    }
+
+    protected void OnSliceClick(IgbSliceClickEventArgs e)
+    {
+    }
+}
