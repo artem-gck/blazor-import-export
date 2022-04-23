@@ -1,5 +1,7 @@
-﻿@using IgniteUI.Blazor.Controls
+﻿@inject IJSRuntime JS
 @inject IIgniteUIBlazor IgniteUIBlazor
+@inject IExcelGenerator _excelGenerator
+@inject IPlotService _plotService
 
 <div>
     <div class="title">Направления экспорта продукции</div>
@@ -9,17 +11,19 @@
         <div class="container vertical">
             @if (data != null)
             {
-                <IgbDoughnutChart Height="380px" Width="80%" @ref="Chart"
-                AllowSliceExplosion="true" >
+                <IgbDoughnutChart Height="380px" 
+                                  Width="80%" 
+                                  @ref="Chart"
+                                  AllowSliceExplosion="true" >
                     <IgbRingSeries DataSource="data"
-                                LabelMemberPath="Summary"
-                                LabelsPosition="LabelsPosition.OutsideEnd"
-                                LabelExtent="30"
-                                ValueMemberPath="Value"
-                                LegendLabelMemberPath="Constituent"
-                                Outlines="white"
-                                RadiusFactor="0.8"
-							    StartAngle="33">
+                                   LabelMemberPath="Summary"
+                                   LabelsPosition="LabelsPosition.OutsideEnd"
+                                   LabelExtent="30"
+                                   ValueMemberPath="Value"
+                                   LegendLabelMemberPath="Constituent"
+                                   Outlines="white"
+                                   RadiusFactor="0.8"
+							       StartAngle="33">
                     </IgbRingSeries>
                 </IgbDoughnutChart>
             }
@@ -27,14 +31,11 @@
     </div>
 </div>
 <div>
-    <button>Сохранить</button>
+    <button @onclick="async e => await DownloadFileFromStream()">Сохранить</button>
     <button @onclick="OnClickCallback">Назад</button>
 </div>
 
 @code {
-    [Inject]
-    private IPlotService _plotService { get; set; }
-
     [Parameter]
     public EventCallback OnClickCallback { get; set; }
 
@@ -78,5 +79,17 @@
 
     protected void OnSliceClick(IgbSliceClickEventArgs e)
     {
+    }
+
+    private async Task DownloadFileFromStream()
+    {
+        var file = await _excelGenerator.GenerateCategoryExportPlot(data);
+        var fileStream = new MemoryStream(file);
+
+        var fileName = $"Направления экспорта продукции {CountryName} {YearValue}.xlsx";
+
+        using var streamRef = new DotNetStreamReference(stream: fileStream);
+
+        await JS.InvokeVoidAsync("downloadFileFromStream", fileName, streamRef);
     }
 }

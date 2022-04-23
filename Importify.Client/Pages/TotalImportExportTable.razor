@@ -1,7 +1,7 @@
-﻿@using IgniteUI.Blazor.Controls
-@using System.IO
-@inject IJSRuntime JS
+﻿@inject IJSRuntime JS
 @inject IIgniteUIBlazor IgniteUIBlazor
+@inject IExcelGenerator _excelGenerator
+@inject IPlotService _plotService
 
 <div>
     <div class="title">Сводная таблица импорта и экспорта продукции</div>
@@ -12,9 +12,10 @@
             @if (data != null)
             {
                 <div style="overflow: hidden">
-                    <IgbDataGrid Height="360px" Width="700px"
-                            DataSource="data"
-                            AutoGenerateColumns="false">
+                    <IgbDataGrid Height="360px" 
+                                 Width="700px"
+                                 DataSource="data"
+                                 AutoGenerateColumns="false">
                         <IgbNumericColumn Field="Year" HeaderText="Год" Width="@("*>100")" PositiveSuffix=" г." NegativeSuffix=" г." MaxFractionDigits="0" MinFractionDigits="0" HorizontalAlignment="CellContentHorizontalAlignment.Center" />
                         <IgbNumericColumn Field="ImportValue" HeaderText="Импорт" Width="@("*>100")" PositiveSuffix=" $" NegativeSuffix=" $" ShowGroupingSeparator="true" MaxFractionDigits="0" MinFractionDigits="0" HorizontalAlignment="CellContentHorizontalAlignment.Center" />
                         <IgbNumericColumn Field="ExportValue" HeaderText="Экспорт" Width="@("*>100")" PositiveSuffix=" $" NegativeSuffix=" $" ShowGroupingSeparator="true" MaxFractionDigits="0" MinFractionDigits="0" HorizontalAlignment="CellContentHorizontalAlignment.Center" />
@@ -31,12 +32,6 @@
 </div>
 
 @code {
-    [Inject]
-    private IExcelGenerator _excelGenerator { get; set; }
-
-    [Inject]
-    private IPlotService _plotService { get; set; }
-
     [Parameter]
     public EventCallback OnClickCallback { get; set; }
 
@@ -59,7 +54,7 @@
         var file = await _excelGenerator.GenerateTotalImportExportTable(data);
         var fileStream = new MemoryStream(file);
 
-        var fileName = "TotalImportExport.xlsx";
+        var fileName = $"Импорт и экспорт продукции {CountryName}.xlsx";
 
         using var streamRef = new DotNetStreamReference(stream: fileStream);
 

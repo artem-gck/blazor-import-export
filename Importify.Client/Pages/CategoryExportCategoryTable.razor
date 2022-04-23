@@ -1,5 +1,7 @@
-﻿@using IgniteUI.Blazor.Controls
+﻿@inject IJSRuntime JS
 @inject IIgniteUIBlazor IgniteUIBlazor
+@inject IExcelGenerator _excelGenerator
+@inject IPlotService _plotService
 
 <div>
     <div class="title">Направления импорта и экспорта</div>
@@ -10,9 +12,10 @@
             @if (data != null)
             {
                 <div style="overflow: hidden">
-                    <IgbDataGrid Height="360px" Width="700px"
-                            DataSource="data"
-                            AutoGenerateColumns="false">
+                    <IgbDataGrid Height="360px" 
+                                 Width="700px"
+                                 DataSource="data"
+                                 AutoGenerateColumns="false">
                         <IgbNumericColumn Field="Year" HeaderText="Год" Width="@("*>100")" PositiveSuffix=" г." NegativeSuffix=" г." MaxFractionDigits="0" MinFractionDigits="0" HorizontalAlignment="CellContentHorizontalAlignment.Center" />
                         <IgbTextColumn Field="Constituent" Width="@("*>100")" HeaderText="Категория" HorizontalAlignment="CellContentHorizontalAlignment.Center" />
                         <IgbNumericColumn Field="Value" HeaderText="Экспорт" Width="@("*>100")" PositiveSuffix=" $" NegativeSuffix=" $" ShowGroupingSeparator="true" MaxFractionDigits="0" MinFractionDigits="0" HorizontalAlignment="CellContentHorizontalAlignment.Center" />
@@ -23,14 +26,11 @@
     </div>
 </div>
 <div>
-    <button>Сохранить</button>
+    <button @onclick="async e => await DownloadFileFromStream()">Сохранить</button>
     <button @onclick="OnClickCallback">Назад</button>
 </div>
 
 @code {
-    [Inject]
-    private IPlotService _plotService { get; set; }
-
     [Parameter]
     public EventCallback OnClickCallback { get; set; }
 
@@ -46,5 +46,17 @@
         StateHasChanged();
 
         IgbDataGridModule.Register(IgniteUIBlazor);
+    }
+
+    private async Task DownloadFileFromStream()
+    {
+        var file = await _excelGenerator.GenerateCategoryExportCategoryTable(data);
+        var fileStream = new MemoryStream(file);
+
+        var fileName = $"Экспорт по категориям {CountryName}.xlsx";
+
+        using var streamRef = new DotNetStreamReference(stream: fileStream);
+
+        await JS.InvokeVoidAsync("downloadFileFromStream", fileName, streamRef);
     }
 }
