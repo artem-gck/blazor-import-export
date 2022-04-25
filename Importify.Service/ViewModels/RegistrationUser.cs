@@ -11,6 +11,6 @@ namespace Importify.Service.ViewModels
         public string Email { get; set; }
         public string Login { get; set; }
         public string Password { get; set; }
-        public string Position { get; set; }
+        public string Role { get; set; }
     }
 }

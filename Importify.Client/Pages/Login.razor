@@ -1,6 +1,9 @@
 ﻿@page "/login"
+
 @layout LoginLayout
+
 @inject Blazored.LocalStorage.ILocalStorageService localStorage
+@inject IAuthService _authService
 
 <PageTitle>Вход</PageTitle>
 
@@ -30,9 +33,6 @@
 </div>
 
 @code {
-    [Inject]
-    private IAuthService _authService { get; set; }
-
     private string Login1 { get; set; }
     private string Password1 { get; set; }
 

@@ -20,5 +20,8 @@
         /// The refresh token.
         /// </value>
         public string RefreshToken { get; set; }
+
+        public string Login { get; set; }
+        public string Role { get; set; }
     }
 }

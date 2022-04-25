@@ -1,0 +1,114 @@
+﻿@page "/accaunt"
+@layout MainLayout
+
+@inject Blazored.LocalStorage.ILocalStorageService localStorage
+@inject IMassageService _massageService;
+
+<div class="accauntLeft">
+    <div class="info">
+        <div class="titles">
+            <span>Логин</span>
+            <span>Роль</span>
+            <span>Номер</span>
+        </div>
+        <div class="values">
+            <span>@Login</span>
+            <span>@Role</span>
+            <span>Номер</span>
+        </div>
+    </div>
+
+    @if (stateOfScreen)
+    {
+        <textarea @bind="comment"></textarea>
+
+        <button class="addComment" @onclick="async e => await AddMassage()">Добавить комментарий</button>
+    }
+    <button class="exit" @onclick="async e => await Exit()">Выйти из аккаунта</button>
+</div>
+
+<div class="accauntRight">
+    <div class="container vertical">
+        <div class="container vertical" style="--use-accessibility:true;">
+            @if (data != null)
+            {
+                <div style="overflow: hidden">
+                    <IgbDataGrid Height="750px" 
+                                 Width="800px"
+                                 DataSource="data"
+                                 AutoGenerateColumns="false">
+                        @if (!stateOfScreen)
+                        {
+                            <IgbTextColumn Field="User" Width="@("*>100")" HeaderText="Отправитель" HorizontalAlignment="CellContentHorizontalAlignment.Left" />
+                        }
+                        <IgbTextColumn Field="MassageText" HeaderText="Содержание" Width="@("*>100")" HorizontalAlignment="CellContentHorizontalAlignment.Left" />
+                    </IgbDataGrid>
+                </div>
+            }
+        </div>
+    </div>
+</div>
+
+@code {
+    private bool stateOfScreen = true;
+    private string role;
+    private string login;
+    private string comment;
+    private List<Massage> data;
+
+    private string Login { 
+        get => "@" + login; 
+        set => login = value; 
+    }
+    private string Number { get; set; }
+    private string Role { 
+        get => role == "admin" ? "администратор" : "пользователь"; 
+        set => role = value; 
+    }
+
+    protected override async Task OnInitializedAsync()
+    {
+        Login = await localStorage.GetItemAsStringAsync("user");
+        Role = await localStorage.GetItemAsStringAsync("role");
+        stateOfScreen = await localStorage.GetItemAsStringAsync("role") == "user" ? true : false;
+
+        data = await GetMassages();
+
+        StateHasChanged();
+    }
+
+    private async Task AddMassage()
+    {
+        var massage = new Massage()
+            {
+                MassageText = comment,
+                User = login
+            };
+
+        var id = await _massageService.AddMassage(massage);
+
+        if (id == - 1)
+            NavManager.NavigateTo("/login");
+
+        data = await GetMassages();
+        StateHasChanged();
+    }
+
+    private async Task Exit()
+    {
+        await localStorage.RemoveItemAsync("user");
+        await localStorage.RemoveItemAsync("role");
+        await localStorage.RemoveItemAsync("access_token");
+        await localStorage.RemoveItemAsync("refresh_token");
+
+        NavManager.NavigateTo("/login");
+    }
+
+    private async Task<List<Massage>> GetMassages()
+    {
+        if (stateOfScreen)
+            return (await _massageService.GetMassages()).Where(mas => mas.User == login).ToList();
+        else
+            return await _massageService.GetMassages();
+    }
+}

@@ -6,12 +6,12 @@ using System.Net.Http.Json;
 
 namespace Importify.Client.Service.Logic
 {
-    public class BasicService : IBasicService
+    public class MassageService : IMassageService
     {
         private readonly HttpClient _httpClient;
         private readonly ILocalStorageService _storageService;
 
-        public BasicService(IConfiguration configuration, ILocalStorageService storageService)
+        public MassageService(IConfiguration configuration, ILocalStorageService storageService)
         {
             _httpClient = new HttpClient()
             {
@@ -24,44 +24,41 @@ namespace Importify.Client.Service.Logic
             _storageService = storageService;
         }
 
-        public async Task<List<Country>> GetCountryes()
+        public async Task<int> AddMassage(Massage massage)
         {
             string responseString;
-            List<Country> countries;
 
             var cookieContent = await _storageService.GetItemAsync<string>("access_token");
-            
+
             if (cookieContent is null)
-                return null;
+                return -1;
 
             _httpClient.DefaultRequestHeaders.Remove("access_token");
             _httpClient.DefaultRequestHeaders.Add("access_token", cookieContent);
 
-            var response = await _httpClient.GetAsync("basic/countries");
+            var response = await _httpClient.PostAsJsonAsync("massage", massage);
 
             if ((int)response.StatusCode == 401)
             {
                 if (await SendRefreshToken(cookieContent) == -1)
-                    return null;
+                    return -1;
 
-                response = await _httpClient.GetAsync("basic/countries");
+                response = await _httpClient.PostAsJsonAsync("massage", massage);
 
                 responseString = await response.Content.ReadAsStringAsync();
-                countries = JsonConvert.DeserializeObject<List<Country>>(responseString);
 
-                return countries;
+                return int.Parse(responseString);
             }
 
             responseString = await response.Content.ReadAsStringAsync();
-            countries = JsonConvert.DeserializeObject<List<Country>>(responseString);
 
-            return countries;
+            return int.Parse(responseString);
         }
 
-        public async Task<List<Year>> GetYears()
+        public async Task<List<Massage>> GetMassages()
         {
             string responseString;
-            List<Year> years;
+            List<Massage> massages;
 
             var cookieContent = await _storageService.GetItemAsync<string>("access_token");
 
@@ -71,25 +68,25 @@ namespace Importify.Client.Service.Logic
             _httpClient.DefaultRequestHeaders.Remove("access_token");
             _httpClient.DefaultRequestHeaders.Add("access_token", cookieContent);
 
-            var response = await _httpClient.GetAsync("basic/years");
+            var response = await _httpClient.GetAsync("massage");
 
             if ((int)response.StatusCode == 401)
             {
                 if (await SendRefreshToken(cookieContent) == -1)
                     return null;
 
-                response = await _httpClient.GetAsync("basic/years");
+                response = await _httpClient.GetAsync("massage");
 
                 responseString = await response.Content.ReadAsStringAsync();
-                years = JsonConvert.DeserializeObject<List<Year>>(responseString);
+                massages = JsonConvert.DeserializeObject<List<Massage>>(responseString);
 
-                return years;
+                return massages;
             }
 
             responseString = await response.Content.ReadAsStringAsync();
-            years = JsonConvert.DeserializeObject<List<Year>>(responseString);
+            massages = JsonConvert.DeserializeObject<List<Massage>>(responseString);
 
-            return years;
+            return massages;
         }
 
         private async Task<int> SendRefreshToken(string cookieContent)
@@ -102,7 +99,7 @@ namespace Importify.Client.Service.Logic
 
             var resp = await _httpClient.PostAsJsonAsync("token/refresh", tok);
 
-            if ((int)resp.StatusCode == 400)
+            if ((int)resp.StatusCode == 404)
                 return -1;
 
             var respString = await resp.Content.ReadAsStringAsync();

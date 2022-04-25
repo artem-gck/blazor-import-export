@@ -10,11 +10,12 @@ var builder = WebAssemblyHostBuilder.CreateDefault(args);
 builder.RootComponents.Add<App>("#app");
 builder.RootComponents.Add<HeadOutlet>("head::after");
 
-builder.Services.AddScoped(typeof(IIgniteUIBlazor), typeof(IgniteUIBlazor));
-builder.Services.AddScoped<IAuthService, AuthService>();
-builder.Services.AddScoped<IBasicService, BasicService>();
-builder.Services.AddScoped<IPlotService, PlotService>();
-builder.Services.AddScoped<IExcelGenerator, ExcelGenerator>();
+builder.Services.AddTransient(typeof(IIgniteUIBlazor), typeof(IgniteUIBlazor));
+builder.Services.AddTransient<IAuthService, AuthService>();
+builder.Services.AddTransient<IBasicService, BasicService>();
+builder.Services.AddTransient<IPlotService, PlotService>();
+builder.Services.AddTransient<IExcelGenerator, ExcelGenerator>();
+builder.Services.AddTransient<IMassageService, MassageService>();
 
 builder.Services.AddHttpContextAccessor();
 builder.Services.AddBlazoredLocalStorage();

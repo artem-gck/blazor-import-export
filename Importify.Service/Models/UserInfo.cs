@@ -27,7 +27,7 @@
         /// <value>
         /// The position.
         /// </value>
-        public string Position { get; set; }
+        public Role? Role { get; set; }
 
         /// <summary>
         /// Gets or sets the email.

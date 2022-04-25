@@ -1,4 +1,5 @@
-﻿using Importify.Client.Model;
+﻿using Blazored.LocalStorage;
+using Importify.Client.Model;
 using Newtonsoft.Json;
 using System.Net.Http.Headers;
 using System.Net.Http.Json;
@@ -9,8 +10,9 @@ namespace Importify.Client.Service.Logic
     public class AuthService : IAuthService
     {
         private readonly HttpClient _httpClient;
+        private readonly ILocalStorageService _storageService;
 
-        public AuthService(IConfiguration configuration)
+        public AuthService(IConfiguration configuration, ILocalStorageService storageService)
         {
             _httpClient = new HttpClient()
             {
@@ -19,6 +21,8 @@ namespace Importify.Client.Service.Logic
 
             _httpClient.DefaultRequestHeaders.Accept.Clear();
             _httpClient.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+
+            _storageService = storageService;
         }
 
         public async Task<Tokens> Login(LoginUser user)
@@ -27,6 +31,9 @@ namespace Importify.Client.Service.Logic
             var tokensString = await response.Content.ReadAsStringAsync();
             
             var tokens = JsonConvert.DeserializeObject<Tokens>(tokensString);
+
+            await _storageService.SetItemAsStringAsync("user", tokens.Login);
+            await _storageService.SetItemAsStringAsync("role", tokens.Role);
 
             return tokens;
         }

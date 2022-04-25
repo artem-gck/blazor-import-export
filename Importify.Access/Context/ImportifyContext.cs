@@ -99,6 +99,8 @@ namespace Importify.Access.Context
         /// </value>
         public DbSet<UserInfo> UserInfos { get; set; } = null!;
 
+        public DbSet<Role> Roles { get; set; } = null!; 
+
         /// <summary>
         /// Gets or sets the massages.
         /// </summary>

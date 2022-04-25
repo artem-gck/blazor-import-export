@@ -41,7 +41,7 @@
     private string Password { get; set; }
     private string AnotherPassword { get; set; }
 
-    private const string Position = "user";
+    private const string Position = "admin";
 
     private async Task SendData()
     {
@@ -50,7 +50,7 @@
             Login = Login,
             Password = Password,
             Email = Email,
-            Position = Position
+            Role = Position
         };
 
         if (await _authService.Registration(model) != -1)

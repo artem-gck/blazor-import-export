@@ -19,13 +19,12 @@ namespace Importify.Controllers
         [HttpPost("login")]
         public async Task<ActionResult<Tokens>> Login([FromBody] LoginUser loginModel)
         {
-            var user = new User()
-            {
-                Login = loginModel.Login,
-                Password = loginModel.Password,
-            };
-
+            var users = await _authService.GetUsersAsync();
+            var user = users.FirstOrDefault(us => us.Login == loginModel.Login);
+            user.Password = loginModel.Password;
             var tokens = await _authService.LoginAsync(user);
+            tokens.Login = loginModel.Login;
+            tokens.Role = user.UserInfo.Role.Value;
 
             if (tokens is null)
                 return Unauthorized();
@@ -45,10 +44,15 @@ namespace Importify.Controllers
         [HttpPost]
         public async Task<ActionResult<int>> RegistrationAsync(RegistrationUser userView)
         {
+            var role = new Role()
+            {
+                Value = userView.Role,
+            };
+
             var userInfo = new UserInfo()
             {
                 Email = userView.Email,
-                Position = userView.Position,
+                Role = role,
             };
 
             var user = new User()

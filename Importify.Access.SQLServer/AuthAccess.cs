@@ -25,6 +25,7 @@ namespace Importify.Access.SQLServer
             login = login is not null ? login : throw new ArgumentNullException(nameof(login));
 
             return await _importifyContext.Users.Include(us => us.UserInfo)
+                                                .ThenInclude(usIn => usIn.Role)
                                                 .FirstOrDefaultAsync(user => user.Login == login);
         }
 
@@ -46,6 +47,7 @@ namespace Importify.Access.SQLServer
         /// <inheritdoc/>
         public async Task<List<User>> GetUsersAsync()
             => await _importifyContext.Users.Include(user => user.UserInfo)
+                                            .ThenInclude(usIn => usIn.Role)
                                             .ToListAsync();
 
         /// <inheritdoc/>
@@ -61,6 +63,7 @@ namespace Importify.Access.SQLServer
         public async Task<int> UpdateUserAsync(User user)
         {
             var us = await _importifyContext.Users.Include(user => user.UserInfo)
+                                                  .ThenInclude(usIn => usIn.Role)
                                                   .FirstOrDefaultAsync(us => us.Login == user.Login);
 
             us.Password = user.Password;

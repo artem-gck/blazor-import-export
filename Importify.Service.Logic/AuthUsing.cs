@@ -52,7 +52,7 @@ namespace Importify.Service.Logic
             var claims = new List<Claim>
             {
                 new Claim(ClaimTypes.Name, userData.Login),
-                new Claim(ClaimTypes.Role, userData.UserInfo.Position)
+                new Claim(ClaimTypes.Role, userData.UserInfo.Role.Value)
             };
 
             var accessToken = GenerateAccessToken(claims);
@@ -75,10 +75,15 @@ namespace Importify.Service.Logic
         {
             var password = HashPassword(user.Password);
 
-            var config = new MapperConfiguration(cfg => cfg.CreateMap<UserInfo, Access.Entities.UserInfo>());
+            var role = new Access.Entities.Role();
+            role.Value = user.UserInfo.Role.Value;
+
+            var config = new MapperConfiguration(cfg => cfg.CreateMap<UserInfo, Access.Entities.UserInfo>()
+                                                           .ForMember(usIn => usIn.Role, opt => opt.Ignore()));
             var mapper = new Mapper(config);
 
             var userInfo = mapper.Map<Access.Entities.UserInfo>(user.UserInfo);
+            userInfo.Role = role;
 
             config = new MapperConfiguration(cfg => cfg.CreateMap<User, Access.Entities.User>()
                                                        .ForMember(us => us.UserInfo, opt => opt.Ignore())
@@ -96,11 +101,20 @@ namespace Importify.Service.Logic
         public async Task<List<User>> GetUsersAsync()
         {
             var users = await _authAccess.GetUsersAsync();
-            
-            var config = new MapperConfiguration(cfg => cfg.CreateMap<Access.Entities.UserInfo, UserInfo>().ForMember(usi => usi.User, opt => opt.Ignore()));
+
+            var config = new MapperConfiguration(cfg => cfg.CreateMap<Access.Entities.Role, Role>().ForMember(r => r.UserInfo, opt => opt.Ignore()));
             var mapper = new Mapper(config);
 
+            var userRoles = users.Select(us => mapper.Map<Role>(us.UserInfo.Role)).ToList();
+
+            config = new MapperConfiguration(cfg => cfg.CreateMap<Access.Entities.UserInfo, UserInfo>().ForMember(usi => usi.User, opt => opt.Ignore())
+                                                                                                           .ForMember(usi => usi.Role, opt => opt.Ignore()));
+            mapper = new Mapper(config);
+            
             var userInfos = users.Select(us => mapper.Map<UserInfo>(us.UserInfo)).ToList();
+
+            for (var i = 0; i < userInfos.Count; i++)
+                userInfos[i].Role = userRoles[i];
 
             config = new MapperConfiguration(cfg => cfg.CreateMap<Access.Entities.User, User>().ForMember(us => us.UserInfo, opt => opt.Ignore()));
             mapper = new Mapper(config);

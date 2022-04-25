@@ -1,4 +1,6 @@
-﻿<div class="links">
+﻿@inject Blazored.LocalStorage.ILocalStorageService localStorage
+
+<div class="links">
     <div class="linkLeft">
         <a class="link" style="@(state ? selectColor : normalColor)" @onclick="e => state = true" href="countryes">
             Страны
@@ -9,11 +11,26 @@
             Категории
         </a>
     </div>
+    @if (admin)
+    {
+        <div class="linkLeft">
+        <a class="link" style="@(state ? normalColor : selectColor)" @onclick="e => state = false" href="users">
+            Пользователи
+        </a>
+    </div>
+    }
 </div>
 
 @code {
     private bool state = true;
+    private bool admin = false;
 
     private string normalColor = "color: #72778E; text-decoration: none;";
     private string selectColor = "color: #354385; text-decoration: underline;";
+
+    protected override async void OnInitialized()
+    {
+        admin = await localStorage.GetItemAsStringAsync("role") == "admin";
+        StateHasChanged();
+    }
 }

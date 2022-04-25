@@ -4,6 +4,9 @@ using Newtonsoft.Json;
 using System.Net.Http.Headers;
 using System.Net.Http.Json;
 
+using System.Security.Claims;
+using System.Text;
+
 namespace Importify.Client.Service.Logic
 {
     public class PlotService : IPlotService
@@ -34,6 +37,7 @@ namespace Importify.Client.Service.Logic
             if (cookieContent is null)
                 return null;
 
+            _httpClient.DefaultRequestHeaders.Remove("access_token");
             _httpClient.DefaultRequestHeaders.Add("access_token", cookieContent);
 
             var response = await _httpClient.GetAsync($"plot/share/{country}/{year}");
@@ -67,6 +71,7 @@ namespace Importify.Client.Service.Logic
             if (cookieContent is null)
                 return null;
 
+            _httpClient.DefaultRequestHeaders.Remove("access_token");
             _httpClient.DefaultRequestHeaders.Add("access_token", cookieContent);
 
             var response = await _httpClient.GetAsync($"plot/countryconstituent/{country}");
@@ -100,6 +105,7 @@ namespace Importify.Client.Service.Logic
             if (cookieContent is null)
                 return null;
 
+            _httpClient.DefaultRequestHeaders.Remove("access_token");
             _httpClient.DefaultRequestHeaders.Add("access_token", cookieContent);
 
             var response = await _httpClient.GetAsync($"plot/all/{country}");
@@ -139,6 +145,8 @@ namespace Importify.Client.Service.Logic
             var respString = await resp.Content.ReadAsStringAsync();
             var tokens = JsonConvert.DeserializeObject<Tokens>(respString);
 
+            _httpClient.DefaultRequestHeaders.Remove("access_token");
+            _httpClient.DefaultRequestHeaders.Remove("refresh_token");
             await _storageService.SetItemAsStringAsync("access_token", tokens.AccessToken);
             await _storageService.SetItemAsStringAsync("refresh_token", tokens.RefreshToken);
 
