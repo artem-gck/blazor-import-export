@@ -29,9 +29,9 @@ namespace Importify.Access.SQLServer
         }
 
         /// <inheritdoc/>
-        public async Task<int> DeleteMassageAsync(Massage massage)
+        public async Task<int> DeleteMassageAsync(int id)
         {
-            var massa = await _context.Massages.Include(ms => ms.User).FirstOrDefaultAsync(ms => ms.User == massage.User && ms.MassageText == massage.MassageText);
+            var massa = await _context.Massages.Include(ms => ms.User).FirstOrDefaultAsync(ms => ms.MassageId == id);
 
             var mas = _context.Massages.Remove(massa);
             await _context.SaveChangesAsync();

@@ -33,11 +33,11 @@ namespace Importify.Controllers
                 return Unauthorized();
         }
 
-        [HttpDelete]
-        public async Task<ActionResult<int>> DeleteMassageAsync(Massage massage)
+        [HttpDelete("{id}")]
+        public async Task<ActionResult<int>> DeleteMassageAsync(int id)
         {
             if (await _tokenService.CheckAccessKey(Request.Headers[_headerName].ToString()))
-                return await _massageService.DeleteMassageAsync(massage);
+                return await _massageService.DeleteMassageAsync(id);
             else
                 return Unauthorized();
         }

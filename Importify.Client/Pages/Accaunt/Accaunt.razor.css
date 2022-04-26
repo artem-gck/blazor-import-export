@@ -72,3 +72,15 @@ textarea {
     width: 250px;
     margin-left: 5%;
 }
+
+.deletedComment {
+    background-color: #D32B27;
+    border: 0px;
+    border-radius: 27px;
+    height: 40px;
+    font: 18px sans-serif;
+    font-family: "SF Compact Text", sans-serif;
+    color: white;
+    width: 250px;
+    margin-left: 5%;
+}

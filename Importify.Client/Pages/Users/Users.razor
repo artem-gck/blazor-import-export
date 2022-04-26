@@ -1,0 +1,18 @@
+﻿@page "/users"
+@layout MainLayout
+
+@inject Blazored.LocalStorage.ILocalStorageService localStorage
+@inject IAuthService _authService;
+
+<PageTitle>Пользователи</PageTitle>
+
+@code {
+    private List<User> users;
+
+    protected override async Task OnInitializedAsync()
+    {
+        users = await _authService.GetUsers();
+
+        StateHasChanged();
+    }
+}

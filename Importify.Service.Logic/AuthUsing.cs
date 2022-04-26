@@ -233,5 +233,32 @@ namespace Importify.Service.Logic
 
             return CryptographicOperations.FixedTimeEquals(actualSubkey, expectedSubkey);
         }
+
+        public async Task<User> GetUser(string login)
+        {
+            var user = await _authAccess.GetUserAsync(login);
+
+            var config = new MapperConfiguration(cfg => cfg.CreateMap<Access.Entities.Role, Role>().ForMember(r => r.UserInfo, opt => opt.Ignore()));
+            var mapper = new Mapper(config);
+
+            var userRole = mapper.Map<Role>(user.UserInfo.Role);
+
+            config = new MapperConfiguration(cfg => cfg.CreateMap<Access.Entities.UserInfo, UserInfo>().ForMember(usi => usi.User, opt => opt.Ignore())
+                                                                                                       .ForMember(usi => usi.Role, opt => opt.Ignore()));
+            mapper = new Mapper(config);
+
+            var userInfo = mapper.Map<UserInfo>(user.UserInfo);
+
+            userInfo.Role = userRole;
+
+            config = new MapperConfiguration(cfg => cfg.CreateMap<Access.Entities.User, User>().ForMember(us => us.UserInfo, opt => opt.Ignore()));
+            mapper = new Mapper(config);
+
+            var userModel = mapper.Map<User>(user);
+
+            userModel.UserInfo = userInfo;
+
+            return userModel;
+        }
     }
 }

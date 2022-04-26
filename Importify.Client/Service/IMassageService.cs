@@ -6,5 +6,6 @@ namespace Importify.Client.Service
     {
         public Task<int> AddMassage(Massage massage);
         public Task<List<Massage>> GetMassages();
+        public Task<int> DeleteMassage(int id);
     }
 }

@@ -19,7 +19,7 @@ namespace Importify.Access
         /// </summary>
         /// <param name="massage">The massage.</param>
         /// <returns>Id of deleted massage.</returns>
-        public Task<int> DeleteMassageAsync(Massage massage);
+        public Task<int> DeleteMassageAsync(int id);
 
         /// <summary>
         /// Gets the massages asynchronous.

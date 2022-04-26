@@ -30,11 +30,9 @@ namespace Importify.Service.Logic
         }
 
         /// <inheritdoc/>
-        public async Task<int> DeleteMassageAsync(Massage massage)
+        public async Task<int> DeleteMassageAsync(int id)
         {
-            var massageModel = await Maping(massage);
-
-            return await _massageAccess.DeleteMassageAsync(massageModel);
+            return await _massageAccess.DeleteMassageAsync(id);
         }
 
         /// <inheritdoc/>

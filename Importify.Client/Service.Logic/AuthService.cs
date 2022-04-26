@@ -25,6 +25,74 @@ namespace Importify.Client.Service.Logic
             _storageService = storageService;
         }
 
+        public async Task<User> GetUser(string login)
+        {
+            string responseString;
+            User user;
+
+            var cookieContent = await _storageService.GetItemAsync<string>("access_token");
+
+            if (cookieContent is null)
+                return null;
+
+            _httpClient.DefaultRequestHeaders.Remove("access_token");
+            _httpClient.DefaultRequestHeaders.Add("access_token", cookieContent);
+
+            var response = await _httpClient.GetAsync($"authentication/user?login={login}");
+
+            if ((int)response.StatusCode == 401)
+            {
+                if (await SendRefreshToken(cookieContent) == -1)
+                    return null;
+
+                response = await _httpClient.GetAsync($"authentication/user?login={login}");
+
+                responseString = await response.Content.ReadAsStringAsync();
+                user = JsonConvert.DeserializeObject<User>(responseString);
+
+                return user;
+            }
+
+            responseString = await response.Content.ReadAsStringAsync();
+            user = JsonConvert.DeserializeObject<User>(responseString);
+
+            return user;
+        }
+
+        public async Task<List<User>> GetUsers()
+        {
+            string responseString;
+            List<User> users;
+
+            var cookieContent = await _storageService.GetItemAsync<string>("access_token");
+
+            if (cookieContent is null)
+                return null;
+
+            _httpClient.DefaultRequestHeaders.Remove("access_token");
+            _httpClient.DefaultRequestHeaders.Add("access_token", cookieContent);
+
+            var response = await _httpClient.GetAsync($"authentication");
+
+            if ((int)response.StatusCode == 401)
+            {
+                if (await SendRefreshToken(cookieContent) == -1)
+                    return null;
+
+                response = await _httpClient.GetAsync($"authentication");
+
+                responseString = await response.Content.ReadAsStringAsync();
+                users = JsonConvert.DeserializeObject<List<User>>(responseString);
+
+                return users;
+            }
+
+            responseString = await response.Content.ReadAsStringAsync();
+            users = JsonConvert.DeserializeObject<List<User>>(responseString);
+
+            return users;
+        }
+
         public async Task<Tokens> Login(LoginUser user)
         {
             var response = await _httpClient.PostAsJsonAsync("authentication/login", user);
@@ -47,6 +115,32 @@ namespace Importify.Client.Service.Logic
                 return idOfUser;
             else
                 return -1;
+        }
+
+        private async Task<int> SendRefreshToken(string cookieContent)
+        {
+            var tok = new Tokens()
+            {
+                AccessToken = cookieContent,
+                RefreshToken = await _storageService.GetItemAsync<string>("refresh_token"),
+            };
+
+            var resp = await _httpClient.PostAsJsonAsync("token/refresh", tok);
+
+            if ((int)resp.StatusCode == 404)
+                return -1;
+
+            var respString = await resp.Content.ReadAsStringAsync();
+            var tokens = JsonConvert.DeserializeObject<Tokens>(respString);
+
+            await _storageService.SetItemAsStringAsync("access_token", tokens.AccessToken);
+            await _storageService.SetItemAsStringAsync("refresh_token", tokens.RefreshToken);
+
+            cookieContent = await _storageService.GetItemAsync<string>("access_token");
+            _httpClient.DefaultRequestHeaders.Remove("access_token");
+            _httpClient.DefaultRequestHeaders.Add("access_token", cookieContent);
+
+            return 0;
         }
     }
 }

@@ -2,19 +2,19 @@
 
 <div class="links">
     <div class="linkLeft">
-        <a class="link" style="@(state ? selectColor : normalColor)" @onclick="e => state = true" href="countryes">
+        <a class="link" style="@(state == 0 ? selectColor : normalColor)" @onclick="e => state = 0" href="countryes">
             Страны
         </a>
     </div>
     <div class="linkLeft">
-        <a class="link" style="@(state ? normalColor : selectColor)" @onclick="e => state = false" href="category">
+        <a class="link" style="@(state == 1 ? normalColor : selectColor)" @onclick="e => state = 1" href="category">
             Категории
         </a>
     </div>
     @if (admin)
     {
         <div class="linkLeft">
-        <a class="link" style="@(state ? normalColor : selectColor)" @onclick="e => state = false" href="users">
+        <a class="link" style="@(state == 2 ? normalColor : selectColor)" @onclick="e => state = 2" href="users">
             Пользователи
         </a>
     </div>
@@ -22,7 +22,7 @@
 </div>
 
 @code {
-    private bool state = true;
+    private byte state = 0;
     private bool admin = false;
 
     private string normalColor = "color: #72778E; text-decoration: none;";

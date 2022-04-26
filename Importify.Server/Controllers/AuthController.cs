@@ -68,10 +68,29 @@ namespace Importify.Controllers
 
         [HttpPut]
         public async Task<ActionResult<int>> UpdateUserAsync(User user)
-            => await _authService.UpdateUserAsync(user);
+        {
+            if (await _tokenService.CheckAccessKey(Request.Headers[_headerName].ToString()))
+                return await _authService.UpdateUserAsync(user);
+            else
+                return Unauthorized();
+        }
 
         [HttpDelete]
         public async Task<ActionResult<int>> DeleteUserAsync(User user)
-            => await _authService.DeleteUserAsync(user);
+        {
+            if (await _tokenService.CheckAccessKey(Request.Headers[_headerName].ToString()))
+                return await _authService.DeleteUserAsync(user);
+            else
+                return Unauthorized();
+        }
+
+        [HttpGet("user")]
+        public async Task<ActionResult<User>> GetUser(string login)
+        {
+            if (await _tokenService.CheckAccessKey(Request.Headers[_headerName].ToString()))
+                return await _authService.GetUser(login);
+            else
+                return Unauthorized();
+        }
     }
 }

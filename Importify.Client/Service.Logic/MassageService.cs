@@ -55,6 +55,37 @@ namespace Importify.Client.Service.Logic
             return int.Parse(responseString);
         }
 
+        public async Task<int> DeleteMassage(int id)
+        {
+            string responseString;
+
+            var cookieContent = await _storageService.GetItemAsync<string>("access_token");
+
+            if (cookieContent is null)
+                return -1;
+
+            _httpClient.DefaultRequestHeaders.Remove("access_token");
+            _httpClient.DefaultRequestHeaders.Add("access_token", cookieContent);
+
+            var response = await _httpClient.DeleteAsync($"massage/{id}");
+
+            if ((int)response.StatusCode == 401)
+            {
+                if (await SendRefreshToken(cookieContent) == -1)
+                    return -1;
+
+                response = await _httpClient.DeleteAsync($"massage/{id}");
+
+                responseString = await response.Content.ReadAsStringAsync();
+
+                return int.Parse(responseString);
+            }
+
+            responseString = await response.Content.ReadAsStringAsync();
+
+            return int.Parse(responseString);
+        }
+
         public async Task<List<Massage>> GetMassages()
         {
             string responseString;

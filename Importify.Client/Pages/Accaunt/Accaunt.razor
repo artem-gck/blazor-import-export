@@ -1,8 +1,11 @@
-﻿@page "/accaunt"
+﻿<PageTitle>Настройки</PageTitle>
+
+@page "/accaunt"
 @layout MainLayout
 
 @inject Blazored.LocalStorage.ILocalStorageService localStorage
 @inject IMassageService _massageService;
+@inject IAuthService _authService;
 
 <div class="accauntLeft">
     <div class="info">
@@ -14,7 +17,7 @@
         <div class="values">
             <span>@Login</span>
             <span>@Role</span>
-            <span>Номер</span>
+            <span>@Number</span>
         </div>
     </div>
 
@@ -23,8 +26,15 @@
         <textarea @bind="comment"></textarea>
 
         <button class="addComment" @onclick="async e => await AddMassage()">Добавить комментарий</button>
+        <button class="exit" @onclick="async e => await Exit()">Выйти из аккаунта</button>
     }
-    <button class="exit" @onclick="async e => await Exit()">Выйти из аккаунта</button>
+    else
+    {
+        <div class="but">
+            <button class="deletedComment" @onclick="async e => await DeleteMassage()">Удалить комментарий</button>
+            <button class="exit" @onclick="async e => await Exit()">Выйти из аккаунта</button>
+        </div>
+    }
 </div>
 
 <div class="accauntRight">
@@ -36,7 +46,10 @@
                     <IgbDataGrid Height="750px" 
                                  Width="800px"
                                  DataSource="data"
-                                 AutoGenerateColumns="false">
+                                 AutoGenerateColumns="false"
+                                 SelectionMode="GridSelectionMode.SingleRow"
+                                 @ref="DataGridRef"
+                                 CellClicked="e => OnSelectRowClick(e)">
                         @if (!stateOfScreen)
                         {
                             <IgbTextColumn Field="User" Width="@("*>100")" HeaderText="Отправитель" HorizontalAlignment="CellContentHorizontalAlignment.Left" />
@@ -55,6 +68,8 @@
     private string login;
     private string comment;
     private List<Massage> data;
+    private IgbDataGrid DataGridRef;
+    private int deletedId;
 
     private string Login { 
         get => "@" + login; 
@@ -73,6 +88,10 @@
         stateOfScreen = await localStorage.GetItemAsStringAsync("role") == "user" ? true : false;
 
         data = await GetMassages();
+
+        var user = await _authService.GetUser(login);
+        Number = user.UserInfo.NumberOfPhone;
+        Number = "+375447940007";
 
         StateHasChanged();
     }
@@ -110,5 +129,18 @@
             return (await _massageService.GetMassages()).Where(mas => mas.User == login).ToList();
         else
             return await _massageService.GetMassages();
+    }
+
+    private void OnSelectRowClick(IgbGridCellEventArgs e)
+    {
+        deletedId = e.CellInfo.DataRow;
+    }
+
+    private async Task DeleteMassage()
+    {
+        await _massageService.DeleteMassage(data[deletedId].MassageId);
+
+        data = await GetMassages();
+        StateHasChanged();
     }
 }

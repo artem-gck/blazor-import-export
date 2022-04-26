@@ -41,5 +41,7 @@ namespace Importify.Service
         /// <param name="user">The user.</param>
         /// <returns>Id of deleted user.</returns>
         public Task<int> DeleteUserAsync(User user);
+
+        public Task<User> GetUser(string login);
     }
 }
