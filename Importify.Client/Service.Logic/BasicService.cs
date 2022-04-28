@@ -24,6 +24,40 @@ namespace Importify.Client.Service.Logic
             _storageService = storageService;
         }
 
+        public async Task<List<Category>> GetCategories()
+        {
+            string responseString;
+            List<Category> categories;
+
+            var cookieContent = await _storageService.GetItemAsync<string>("access_token");
+
+            if (cookieContent is null)
+                return null;
+
+            _httpClient.DefaultRequestHeaders.Remove("access_token");
+            _httpClient.DefaultRequestHeaders.Add("access_token", cookieContent);
+
+            var response = await _httpClient.GetAsync("basic/categories");
+
+            if ((int)response.StatusCode == 401)
+            {
+                if (await SendRefreshToken(cookieContent) == -1)
+                    return null;
+
+                response = await _httpClient.GetAsync("basic/categories");
+
+                responseString = await response.Content.ReadAsStringAsync();
+                categories = JsonConvert.DeserializeObject<List<Category>>(responseString);
+
+                return categories;
+            }
+
+            responseString = await response.Content.ReadAsStringAsync();
+            categories = JsonConvert.DeserializeObject<List<Category>>(responseString);
+
+            return categories;
+        }
+
         public async Task<List<Country>> GetCountryes()
         {
             string responseString;

@@ -14,7 +14,7 @@
         <div class="con">
             @if (leftState)
             {
-                <h1>0</h1>
+                 <CategoryImport />
             }
             else
             {
@@ -26,7 +26,7 @@
 <div class="col-12 col-sm-12 col-md-6 col-lg-6 col-xl-6 leftSide">
     <div class="leftSideInside">
         <div>
-            <button class="selectedIte" style="@(rightState == 0 ? selectColor : normalColor)" @onclick="e => rightState = 0">Общемировой эеспорт</button>
+            <button class="selectedIte" style="@(rightState == 0 ? selectColor : normalColor)" @onclick="e => rightState = 0">Общемировой экспорт</button>
             <button class="selectedIte" style="@(rightState == 1 ? selectColor : normalColor)" @onclick="e => rightState = 1">Доля стран в импорте</button>
             <button class="selectedIte" style="@(rightState == 2 ? selectColor : normalColor)" @onclick="e => rightState = 2">Доля стран в экспорте</button>
         </div>

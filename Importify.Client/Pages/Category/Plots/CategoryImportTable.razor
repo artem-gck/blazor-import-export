@@ -18,7 +18,7 @@
                                  AutoGenerateColumns="false">
                         <IgbNumericColumn Field="Year" HeaderText="Год" Width="@("*>100")" PositiveSuffix=" г." NegativeSuffix=" г." MaxFractionDigits="0" MinFractionDigits="0" HorizontalAlignment="CellContentHorizontalAlignment.Center" />
                         <IgbTextColumn Field="Country" Width="@("*>100")" HeaderText="Страна" HorizontalAlignment="CellContentHorizontalAlignment.Center" />
-                        <IgbNumericColumn Field="ExportValue" HeaderText="Экспорт" Width="@("*>100")" PositiveSuffix=" $" NegativeSuffix=" $" ShowGroupingSeparator="true" MaxFractionDigits="0" MinFractionDigits="0" HorizontalAlignment="CellContentHorizontalAlignment.Center" />
+                        <IgbNumericColumn Field="ImportValue" HeaderText="Импорт" Width="@("*>100")" PositiveSuffix=" $" NegativeSuffix=" $" ShowGroupingSeparator="true" MaxFractionDigits="0" MinFractionDigits="0" HorizontalAlignment="CellContentHorizontalAlignment.Center" />
                     </IgbDataGrid>
                 </div>
             }
@@ -37,11 +37,11 @@
     [Parameter]
     public string CategoryName { get; set; }
 
-    private List<ExportConstituent> data;
+    private List<ImportConstituent> data;
 
     protected override async void OnInitialized()
     {
-        data = await _plotService.GetExportConstituent(CategoryName);
+        data = await _plotService.GetImportConstituent(CategoryName);
 
         StateHasChanged();
 

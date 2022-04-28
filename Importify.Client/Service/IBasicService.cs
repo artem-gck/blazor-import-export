@@ -6,5 +6,6 @@ namespace Importify.Client.Service
     {
         public Task<List<Country>> GetCountryes();
         public Task<List<Year>> GetYears();
+        public Task<List<Category>> GetCategories();
     }
 }

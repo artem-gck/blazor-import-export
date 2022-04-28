@@ -4,9 +4,6 @@ using Newtonsoft.Json;
 using System.Net.Http.Headers;
 using System.Net.Http.Json;
 
-using System.Security.Claims;
-using System.Text;
-
 namespace Importify.Client.Service.Logic
 {
     public class PlotService : IPlotService
@@ -127,6 +124,74 @@ namespace Importify.Client.Service.Logic
             countryImportExport = JsonConvert.DeserializeObject<List<CountryImportExport>>(responseString);
 
             return countryImportExport;
+        }
+
+        public async Task<List<ExportConstituent>> GetExportConstituent(string category)
+        {
+            string responseString;
+            List<ExportConstituent> exportConstituent;
+
+            var cookieContent = await _storageService.GetItemAsync<string>("access_token");
+
+            if (cookieContent is null)
+                return null;
+
+            _httpClient.DefaultRequestHeaders.Remove("access_token");
+            _httpClient.DefaultRequestHeaders.Add("access_token", cookieContent);
+
+            var response = await _httpClient.GetAsync($"plot/worldconstituent/{category}");
+
+            if ((int)response.StatusCode == 401)
+            {
+                if (await SendRefreshToken(cookieContent) == -1)
+                    return null;
+
+                response = await _httpClient.GetAsync($"plot/worldconstituent/{category}");
+
+                responseString = await response.Content.ReadAsStringAsync();
+                exportConstituent = JsonConvert.DeserializeObject<List<ExportConstituent>>(responseString);
+
+                return exportConstituent;
+            }
+
+            responseString = await response.Content.ReadAsStringAsync();
+            exportConstituent = JsonConvert.DeserializeObject<List<ExportConstituent>>(responseString);
+
+            return exportConstituent;
+        }
+
+        public async Task<List<ImportConstituent>> GetImportConstituent(string category)
+        {
+            string responseString;
+            List<ImportConstituent> importConstituent;
+
+            var cookieContent = await _storageService.GetItemAsync<string>("access_token");
+
+            if (cookieContent is null)
+                return null;
+
+            _httpClient.DefaultRequestHeaders.Remove("access_token");
+            _httpClient.DefaultRequestHeaders.Add("access_token", cookieContent);
+
+            var response = await _httpClient.GetAsync($"plot/worldconstituent/{category}");
+
+            if ((int)response.StatusCode == 401)
+            {
+                if (await SendRefreshToken(cookieContent) == -1)
+                    return null;
+
+                response = await _httpClient.GetAsync($"plot/worldconstituent/{category}");
+
+                responseString = await response.Content.ReadAsStringAsync();
+                importConstituent = JsonConvert.DeserializeObject<List<ImportConstituent>>(responseString);
+
+                return importConstituent;
+            }
+
+            responseString = await response.Content.ReadAsStringAsync();
+            importConstituent = JsonConvert.DeserializeObject<List<ImportConstituent>>(responseString);
+
+            return importConstituent;
         }
 
         private async Task<int> SendRefreshToken(string cookieContent)
