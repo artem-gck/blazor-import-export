@@ -1,0 +1,50 @@
+﻿<div class="content">
+    @if (stateOfScreen)
+    {
+        <div>
+            <div class="title">Экспорт в направлении по странам</div>
+            <br/>
+            <br/>
+            <div class="text">Таблица экспорта в направлениях по странам отображает данные по  экспорту в выбранном напралении в различных странах. Данные отображаются в виде таблицы. Для просмотра необходимо выбрать страну в выпадающем списке.</div>
+            <br/>
+            <br/>
+            <select class="select" @bind="nameOfCountry">
+                @if (listOfCountry != null)
+                {
+                    @foreach (var country in listOfCountry)
+                    {
+                        <option value="@country.Name">@country.Name</option>
+                    }
+                }
+            </select>
+        </div>
+        <div>
+            <button @onclick="e => OnButtonClick()">Показать таблицу</button>
+        </div>
+    }
+    else
+    {
+        <CategoryExportTable CountryName="@nameOfCountry" OnClickCallback="@OnButtonClick"/>
+    }
+</div>
+
+@code {
+    [Inject]
+    private IBasicService _basicService { get; set; }
+
+    private bool stateOfScreen = true;
+
+    private string nameOfCountry = "Австралия";
+    private List<Country> listOfCountry;
+
+    protected override async Task OnInitializedAsync()
+    {
+        listOfCountry = await _basicService.GetCountryes();
+
+        if (listOfCountry is null)
+            NavManager.NavigateTo("/login");
+    }
+
+    private async Task OnButtonClick()
+        => stateOfScreen = !stateOfScreen;
+}

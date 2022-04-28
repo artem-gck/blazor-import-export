@@ -1,0 +1,60 @@
+﻿<PageTitle>Категории</PageTitle>
+
+@page "/categories"
+@layout MainLayout
+
+<div class="col-12 col-sm-12 col-md-6 col-lg-6 col-xl-6 leftSide">
+    <div class="leftSideInside">
+        <div>
+            <button class="selectedItem" style="@(leftState ? selectColor : normalColor)" @onclick="e => leftState = true">Статистика импорта</button>
+            <button class="selectedItem" style="@(leftState ? normalColor : selectColor)" @onclick="e => leftState = false">Статистика экспорта</button>
+        </div>
+        <br/>
+        <br/>
+        <div class="con">
+            @if (leftState)
+            {
+                <h1>0</h1>
+            }
+            else
+            {
+                <CategoryExport />
+            }
+        </div>
+    </div>
+</div>
+<div class="col-12 col-sm-12 col-md-6 col-lg-6 col-xl-6 leftSide">
+    <div class="leftSideInside">
+        <div>
+            <button class="selectedIte" style="@(rightState == 0 ? selectColor : normalColor)" @onclick="e => rightState = 0">Общемировой эеспорт</button>
+            <button class="selectedIte" style="@(rightState == 1 ? selectColor : normalColor)" @onclick="e => rightState = 1">Доля стран в импорте</button>
+            <button class="selectedIte" style="@(rightState == 2 ? selectColor : normalColor)" @onclick="e => rightState = 2">Доля стран в экспорте</button>
+        </div>
+        <br/>
+        <br/>
+        <div class="con">
+            @switch(rightState)
+            {
+                case 0:
+                    <h1>0</h1>
+                    break;
+
+                case 1:
+                    <h1>1</h1>
+                    break;
+
+                case 2:
+                    <h1>2</h1>
+                    break;
+            }
+        </div>
+    </div>
+</div>
+
+@code {
+    private bool leftState = true;
+    private int rightState = 0;
+
+    private string normalColor = "color: #72778E; text-decoration: none;";
+    private string selectColor = "color: #354385; text-decoration: underline;";
+}

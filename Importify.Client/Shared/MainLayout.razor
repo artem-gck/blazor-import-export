@@ -2,12 +2,32 @@
 @using System.Text
 @using Microsoft.IdentityModel.Tokens
 @using System.IdentityModel.Tokens.Jwt
+
 @inherits LayoutComponentBase
 
 @inject Blazored.LocalStorage.ILocalStorageService localStorage
 
 <header>
-    <NavMenu />
+    <div class="links">
+        <div class="linkLeft">
+            <a class="link" style="@(state == 0 ? selectColor : normalColor)" @onclick="e => state = 0" href="countryes">
+                Страны
+            </a>
+        </div>
+        <div class="linkLeft">
+            <a class="link" style="@(state == 1 ? selectColor : normalColor)" @onclick="e => state = 1" href="categories">
+                Категории
+            </a>
+        </div>
+        @if (admin)
+        {
+            <div class="linkLeft">
+            <a class="link" style="@(state == 2 ? selectColor : normalColor)" @onclick="e => state = 2" href="users">
+                Пользователи
+            </a>
+        </div>
+        }
+    </div>
     <div class="buttonP">
         <div class="linkRight">
             <div class="rightSpan">@Login</div>
@@ -33,6 +53,12 @@
 </footer>
 
 @code {
+    private byte state = 0;
+    private bool admin = false;
+
+    private string normalColor = "color: #72778E; text-decoration: none;";
+    private string selectColor = "color: #354385; text-decoration: underline;";
+
     private string login;
 
     private string Login { 
@@ -42,10 +68,16 @@
 
     protected override async void OnInitialized()
     {
+        admin = await localStorage.GetItemAsStringAsync("role") == "admin";
+
         Login = await localStorage.GetItemAsStringAsync("user");
         StateHasChanged();
     }
 
     private void OnClick()
-        => NavManager.NavigateTo("/accaunt");
+    {
+        state = 4;
+
+        NavManager.NavigateTo("/accaunt");
+    }
 }

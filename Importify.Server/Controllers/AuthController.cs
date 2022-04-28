@@ -19,8 +19,11 @@ namespace Importify.Controllers
         [HttpPost("login")]
         public async Task<ActionResult<Tokens>> Login([FromBody] LoginUser loginModel)
         {
-            var users = await _authService.GetUsersAsync();
-            var user = users.FirstOrDefault(us => us.Login == loginModel.Login);
+            var user = await _authService.GetUser(loginModel.Login);
+
+            if (user is null)
+                return null;
+
             user.Password = loginModel.Password;
             var tokens = await _authService.LoginAsync(user);
             tokens.Login = loginModel.Login;
@@ -67,7 +70,7 @@ namespace Importify.Controllers
         }
 
         [HttpPut]
-        public async Task<ActionResult<int>> UpdateUserAsync(User user)
+        public async Task<ActionResult<int>> UpdateUserAsync([FromBody] User user)
         {
             if (await _tokenService.CheckAccessKey(Request.Headers[_headerName].ToString()))
                 return await _authService.UpdateUserAsync(user);
@@ -75,11 +78,11 @@ namespace Importify.Controllers
                 return Unauthorized();
         }
 
-        [HttpDelete]
-        public async Task<ActionResult<int>> DeleteUserAsync(User user)
+        [HttpDelete("{id}")]
+        public async Task<ActionResult<int>> DeleteUserAsync(int id)
         {
             if (await _tokenService.CheckAccessKey(Request.Headers[_headerName].ToString()))
-                return await _authService.DeleteUserAsync(user);
+                return await _authService.DeleteUserAsync(id);
             else
                 return Unauthorized();
         }
@@ -89,6 +92,24 @@ namespace Importify.Controllers
         {
             if (await _tokenService.CheckAccessKey(Request.Headers[_headerName].ToString()))
                 return await _authService.GetUser(login);
+            else
+                return Unauthorized();
+        }
+
+        [HttpGet("roles")]
+        public async Task<ActionResult<List<Role>>> GetAllRoles()
+        {
+            if (await _tokenService.CheckAccessKey(Request.Headers[_headerName].ToString()))
+                return await _authService.GetAllRoles();
+            else
+                return Unauthorized();
+        }
+
+        [HttpPost("add")]
+        public async Task<ActionResult<int>> AddUserAsync([FromBody] User user)
+        {
+            if (await _tokenService.CheckAccessKey(Request.Headers[_headerName].ToString()))
+                return await _authService.AddUserAsync(user);
             else
                 return Unauthorized();
         }

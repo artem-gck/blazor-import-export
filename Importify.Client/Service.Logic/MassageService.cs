@@ -26,31 +26,8 @@ namespace Importify.Client.Service.Logic
 
         public async Task<int> AddMassage(Massage massage)
         {
-            string responseString;
-
-            var cookieContent = await _storageService.GetItemAsync<string>("access_token");
-
-            if (cookieContent is null)
-                return -1;
-
-            _httpClient.DefaultRequestHeaders.Remove("access_token");
-            _httpClient.DefaultRequestHeaders.Add("access_token", cookieContent);
-
             var response = await _httpClient.PostAsJsonAsync("massage", massage);
-
-            if ((int)response.StatusCode == 401)
-            {
-                if (await SendRefreshToken(cookieContent) == -1)
-                    return -1;
-
-                response = await _httpClient.PostAsJsonAsync("massage", massage);
-
-                responseString = await response.Content.ReadAsStringAsync();
-
-                return int.Parse(responseString);
-            }
-
-            responseString = await response.Content.ReadAsStringAsync();
+            var responseString = await response.Content.ReadAsStringAsync();
 
             return int.Parse(responseString);
         }

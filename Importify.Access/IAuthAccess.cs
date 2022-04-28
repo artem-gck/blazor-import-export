@@ -46,6 +46,8 @@ namespace Importify.Access
         /// </summary>
         /// <param name="user">The user.</param>
         /// <returns>Id of deleted user.</returns>
-        public Task<int> DeleteUserAsync(User user);
+        public Task<int> DeleteUserAsync(int id);
+
+        public Task<List<Role>> GetAllRoles();
     }
 }

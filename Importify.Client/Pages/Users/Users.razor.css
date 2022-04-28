@@ -1,0 +1,107 @@
+﻿.cont {
+    height: 100%;
+    display: flex;
+    flex-direction: row;
+}
+
+.leftSi {
+    height: 100%;
+    width: 70%;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+}
+
+.rightSi {
+    height: 100%;
+    width: 30%;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+}
+
+.conta {
+    width: 80%;
+    text-align: center;
+    margin-left: auto;
+    margin-right: auto;
+    
+}
+
+.leftS {
+    height: 75%;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+.usersButtons {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around;
+    width: 70%;
+    text-align: center;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.userButton {
+    background-color: #354385;
+    border: 0px;
+    border-radius: 27px;
+    height: 35px;
+    font: 18px sans-serif;
+    font-family: "SF Compact Text", sans-serif;
+    color: white;
+    width: 200px;
+}
+
+.hello {
+    width: 100%;
+    height: 50%;
+}
+
+.inputUs {
+    width: 50%;
+    border: 0px;
+    border-radius: 25px;
+    height: 35px;
+    font-size: 18px;
+    font-family: "SF Compact Text", sans-serif;
+    padding-left: 10px;
+    background-color: lightgray;
+}
+
+.inputUs:focus {
+    outline: none !important
+}
+
+.select {
+    background-color: #F2F3F7;
+    border-radius: 20px;
+    border-color: #354385;
+    width: 50%;
+    height: 35px;
+    padding-left: 10px;
+    font: 18px sans-serif;
+    font-family: "SF Compact Text", sans-serif;
+    color: #72778E;
+}
+
+.boxForInput {
+    display: flex;
+    flex-direction: column;
+}
+
+.lable {
+    font: 18px sans-serif;
+    font-family: "SF Compact Text", sans-serif;
+    color: #354385;
+}
+
+.addForm {
+    height: 40%;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}

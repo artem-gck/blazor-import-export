@@ -88,6 +88,11 @@ img {
     outline: none !important
 }
 
+.buttonPlace {
+    width: 100%;
+    text-align: center;
+}
+
 .acceptButton {
     background-color: #02E079;
     border: 0px;
@@ -108,11 +113,6 @@ img {
     font-family: "SF Compact Text", sans-serif;
     color: white;
     width: 250px;
-}
-
-.buttonPlace {
-    width: 100%;
-    text-align: center;
 }
 
 .forgotPasswordPlace {
@@ -237,7 +237,7 @@ hr {
     font: 18px sans-serif;
     font-family: "SF Compact Text", sans-serif;
     color: #72778E;
-    width: 300px;
+    width: 48%;
 }
 
 .con {

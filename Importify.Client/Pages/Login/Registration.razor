@@ -22,6 +22,7 @@
         <br/>
         <p class="formText">Повторите пароль</p>
         <input class="input" type="password" @bind="@AnotherPassword"/>
+        <span class="errorOfPassword">@error</span>
         <br/>
         <div class="forgotPasswordPlace">
             <a href="/login" class="registrationLink">Уже есть аккаунт?</a>
@@ -41,10 +42,17 @@
     private string Password { get; set; }
     private string AnotherPassword { get; set; }
 
-    private const string Position = "admin";
+    private string error;
+    private const string Position = "user";
 
     private async Task SendData()
     {
+        if (Password != AnotherPassword)
+        {
+            error = "Пароли не совпадают";
+            return;
+        }
+
         var model = new RegistrationUser()
         {
             Login = Login,
@@ -55,5 +63,7 @@
 
         if (await _authService.Registration(model) != -1)
             NavManager.NavigateTo("/");
+        else
+            error = "Пользователь не зарегестрирован";
     }
 }

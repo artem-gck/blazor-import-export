@@ -2,7 +2,7 @@
 {
     public class User
     {
-        public int UserId { get; set; }
+        public int? UserId { get; set; }
 
         /// <summary>
         /// Gets or sets the login.

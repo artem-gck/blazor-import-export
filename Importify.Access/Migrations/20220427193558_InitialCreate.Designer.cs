@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Importify.Access.Migrations
 {
     [DbContext(typeof(ImportifyContext))]
-    [Migration("20220424185111_AddRolesTable")]
-    partial class AddRolesTable
+    [Migration("20220427193558_InitialCreate")]
+    partial class InitialCreate
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -219,9 +219,6 @@ namespace Importify.Access.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("UserInfoId")
-                        .IsUnique();
-
                     b.ToTable("Roles");
                 });
 
@@ -258,13 +255,22 @@ namespace Importify.Access.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("UserInfoId"), 1L, 1);
 
+                    b.Property<string>("Email")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<string>("NumberOfPhone")
                         .HasColumnType("nvarchar(max)");
+
+                    b.Property<int?>("RoleId")
+                        .HasColumnType("int");
 
                     b.Property<int>("UserId")
                         .HasColumnType("int");
 
                     b.HasKey("UserInfoId");
+
+                    b.HasIndex("RoleId");
 
                     b.HasIndex("UserId")
                         .IsUnique();
@@ -371,24 +377,19 @@ namespace Importify.Access.Migrations
                     b.Navigation("User");
                 });
 
-            modelBuilder.Entity("Importify.Access.Entities.Role", b =>
-                {
-                    b.HasOne("Importify.Access.Entities.UserInfo", "UserInfo")
-                        .WithOne("Role")
-                        .HasForeignKey("Importify.Access.Entities.Role", "UserInfoId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("UserInfo");
-                });
-
             modelBuilder.Entity("Importify.Access.Entities.UserInfo", b =>
                 {
+                    b.HasOne("Importify.Access.Entities.Role", "Role")
+                        .WithMany("UserInfo")
+                        .HasForeignKey("RoleId");
+
                     b.HasOne("Importify.Access.Entities.User", "User")
                         .WithOne("UserInfo")
                         .HasForeignKey("Importify.Access.Entities.UserInfo", "UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+
+                    b.Navigation("Role");
 
                     b.Navigation("User");
                 });
@@ -411,17 +412,17 @@ namespace Importify.Access.Migrations
                     b.Navigation("CommonImports");
                 });
 
+            modelBuilder.Entity("Importify.Access.Entities.Role", b =>
+                {
+                    b.Navigation("UserInfo");
+                });
+
             modelBuilder.Entity("Importify.Access.Entities.User", b =>
                 {
                     b.Navigation("Massages");
 
                     b.Navigation("UserInfo")
                         .IsRequired();
-                });
-
-            modelBuilder.Entity("Importify.Access.Entities.UserInfo", b =>
-                {
-                    b.Navigation("Role");
                 });
 
             modelBuilder.Entity("Importify.Access.Entities.Year", b =>

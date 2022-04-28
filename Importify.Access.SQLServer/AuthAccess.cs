@@ -53,6 +53,8 @@ namespace Importify.Access.SQLServer
         /// <inheritdoc/>
         public async Task<int> AddUserAsync(User user)
         {
+            user.UserInfo.Role = await GetRole(user.UserInfo.Role.Value);
+
             var us = await _importifyContext.Users.AddAsync(user);
             await _importifyContext.SaveChangesAsync();
 
@@ -66,8 +68,14 @@ namespace Importify.Access.SQLServer
                                                   .ThenInclude(usIn => usIn.Role)
                                                   .FirstOrDefaultAsync(us => us.Login == user.Login);
 
+            us.Login = user.Login;
             us.Password = user.Password;
-            us.UserInfo = user.UserInfo;
+            us.UserInfo.UserInfoId = user.UserInfo.UserInfoId;
+            us.UserInfo.NumberOfPhone = user.UserInfo.NumberOfPhone;
+            us.UserInfo.Email = user.UserInfo.Email;
+
+            var role = await GetRole(user.UserInfo.Role.Value);
+            us.UserInfo.Role = role;
 
             await _importifyContext.SaveChangesAsync();
 
@@ -75,14 +83,38 @@ namespace Importify.Access.SQLServer
         }
 
         /// <inheritdoc/>
-        public async Task<int> DeleteUserAsync(User user)
+        public async Task<int> DeleteUserAsync(int id)
         {
-            var us = await _importifyContext.Users.FirstOrDefaultAsync(us => us.Login == user.Login);
+            var us = await _importifyContext.Users.FirstOrDefaultAsync(us => us.UserId == id);
 
             _importifyContext.Users.Remove(us);
             await _importifyContext.SaveChangesAsync();
 
             return us.UserId;
+        }
+
+        private async Task<Role> GetRole(string role)
+        {
+            var roleDb = await _importifyContext.Roles.FirstOrDefaultAsync(r => r.Value == role);
+
+            if (roleDb is null)
+            {
+                var newRole = new Role()
+                {
+                    Value = role
+                };
+
+                var ro = await _importifyContext.AddAsync(newRole);
+
+                return ro.Entity;
+            }
+
+            return roleDb;
+        }
+
+        public async Task<List<Role>> GetAllRoles()
+        {
+            return await _importifyContext.Roles.ToListAsync();
         }
     }
 }

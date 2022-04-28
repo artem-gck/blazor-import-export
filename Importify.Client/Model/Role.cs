@@ -2,6 +2,6 @@
 {
     public class Role
     {
-        public string Value { get; set; }
+        public string? Value { get; set; }
     }
 }

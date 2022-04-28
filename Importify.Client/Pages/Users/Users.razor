@@ -1,18 +1,159 @@
 ﻿@page "/users"
 @layout MainLayout
 
+@inject IIgniteUIBlazor IgniteUIBlazor
 @inject Blazored.LocalStorage.ILocalStorageService localStorage
-@inject IAuthService _authService;
+@inject IAuthService _authService
 
 <PageTitle>Пользователи</PageTitle>
 
+<div class="cont">
+    <div class="leftSi">
+        <div class="leftS">
+            <div class="conta vertical">
+                <div class="conta vertical" style="--use-accessibility:true;">
+                    @if (data != null)
+                    {
+                        <div style="overflow: hidden">
+                            <IgbDataGrid Height="600px" 
+                                         Width="100%"
+                                         DataSource="data"
+                                         AutoGenerateColumns="false"
+                                         SelectionMode="GridSelectionMode.SingleRow"
+                                         CellClicked="e => OnSelectRowClick(e)">
+                                <IgbTextColumn Field="Login" Width="@("*>100")" HeaderText="Логин" HorizontalAlignment="CellContentHorizontalAlignment.Center" />
+                                <IgbTextColumn Field="Email" Width="@("*>100")" HeaderText="Email" HorizontalAlignment="CellContentHorizontalAlignment.Center" />
+                                <IgbTextColumn Field="NumberOfPhone" Width="@("*>100")" HeaderText="Номер" HorizontalAlignment="CellContentHorizontalAlignment.Center" />
+                                <IgbTextColumn Field="Role" Width="@("*>100")" HeaderText="Роль" HorizontalAlignment="CellContentHorizontalAlignment.Center" />
+                            </IgbDataGrid>
+                        </div>
+                    }
+                </div>
+            </div>
+            <div class="usersButtons">
+                <button class="userButton" @onclick="async e => await AddUser()">Добавить</button>
+                <button class="userButton" @onclick="async e => await UpdateUser()">Редактировать</button>
+                <button class="userButton" @onclick="async e => await DeleteUser()">Удалить</button>
+            </div>
+        </div>
+    </div>
+    <div class="rightSi">
+        <div class="addForm">
+            <div class="boxForInput">
+                <span class="lable">Логин</span>
+                <input class="inputUs" type="text" @bind="@Login"/>
+            </div>
+            <div class="boxForInput">
+                <span class="lable">Пароль</span>
+                <input class="inputUs" type="text" @bind="@Password"/>
+            </div>
+            <div class="boxForInput">
+                <span class="lable">Email</span>
+                <input class="inputUs" type="text" @bind="@Email"/>
+            </div>
+            <div class="boxForInput">
+                <span class="lable">Номер телефона</span>
+                <input class="inputUs" type="text" @bind="@NumberOfPhone"/>
+            </div>
+            <div class="boxForInput">
+                <span class="lable">Роль</span>
+                <select class="select" @bind="role">
+                    @if (roles != null)
+                    {
+                        @foreach (var role in roles)
+                        {
+                            <option value="@role.Value">@role.Value</option>
+                        }
+                    }
+                </select>
+            </div>
+        </div>
+    </div>
+</div>
+
 @code {
-    private List<User> users;
+    private string Login { get; set; }
+    private string Password { get; set; }
+    private string Email { get; set; }
+    private string NumberOfPhone { get; set; }
 
-    protected override async Task OnInitializedAsync()
+    private string role = "user";
+    private int deletedId;
+
+    private List<UserView> data;
+    private List<Role> roles;
+
+    protected override async void OnInitialized()
     {
-        users = await _authService.GetUsers();
+        data = await _authService.GetUsers();
+        roles = await _authService.GetAllRoles();
 
+        StateHasChanged();
+
+        IgbDataGridModule.Register(IgniteUIBlazor);
+    }
+
+    private void OnSelectRowClick(IgbGridCellEventArgs e)
+    {
+        deletedId = e.CellInfo.DataRow;
+        var user = data[deletedId];
+
+        Login = user.Login;
+        Email = user.Email;
+        NumberOfPhone = user.NumberOfPhone;
+        role = user.Role;
+
+        StateHasChanged();
+    }
+
+    private async Task DeleteUser()
+    {
+        await _authService.DeleteUser(data[deletedId].Id);
+
+        data = await _authService.GetUsers();
+        StateHasChanged();
+    }
+
+    private async Task UpdateUser()
+    {
+        var user = await _authService.GetUser(Login);
+
+        user.UserInfo.Role.Value = role;
+        user.UserInfo.Email = Email;
+        user.UserInfo.NumberOfPhone = NumberOfPhone;
+        user.Login = Login;
+        user.Password = Password;
+
+        await _authService.UpdateUser(user);
+
+        data = await _authService.GetUsers();
+        StateHasChanged();
+    }
+
+    private async Task AddUser()
+    {
+        var roleU = new Role()
+        {
+            Value = role,
+        };
+
+        var userInfo = new UserInfo()
+        {
+            Role = roleU,
+            Email = Email,
+            NumberOfPhone = NumberOfPhone
+        };
+
+        var user = new User()
+        {
+            UserInfo = userInfo,
+            Login = Login,
+            Password = Password
+        };
+
+        await _authService.AddUser(user);
+
+        data = await _authService.GetUsers();
         StateHasChanged();
     }
 }

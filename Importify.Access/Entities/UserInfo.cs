@@ -21,6 +21,8 @@
         /// </value>
         public string? NumberOfPhone { get; set; }
 
+        public string Email { get; set; }
+
         /// <summary>
         /// Gets or sets the position.
         /// </summary>

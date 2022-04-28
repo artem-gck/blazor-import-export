@@ -27,10 +27,7 @@ namespace Importify.Controllers
         [HttpPost]
         public async Task<ActionResult<int>> AddMassageAsync(Massage massage)
         {
-            if (await _tokenService.CheckAccessKey(Request.Headers[_headerName].ToString()))
-                return await _massageService.AddMassageAsync(massage);
-            else
-                return Unauthorized();
+            return await _massageService.AddMassageAsync(massage);
         }
 
         [HttpDelete("{id}")]

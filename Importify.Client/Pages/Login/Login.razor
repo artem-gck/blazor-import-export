@@ -20,9 +20,10 @@
         <br/>
         <p class="formText">Пароль</p>
         <input class="input" type="password" @bind="@Password1"/>
+        <span class="errorOfPassword">@error</span>
         <br/>
         <div class="forgotPasswordPlace">
-            <a href="#" class="forgotPassword">Забыли пароль?</a>
+            <a href="/forgotPassword" class="forgotPassword">Забыли пароль?</a>
             <br/>
             <a href="/registration" class="registrationLink">Нет аккаунта?</a>
         </div>
@@ -36,6 +37,8 @@
     private string Login1 { get; set; }
     private string Password1 { get; set; }
 
+    private string error;
+
     private async Task SendData()
     {
         var model = new LoginUser()
@@ -45,6 +48,13 @@
         };
 
         var tokens = await _authService.Login(model);
+
+        if (tokens is null)
+        {
+            error = "Пароль или догин не верные";
+            return;
+        }
+
         await Authenticate(tokens);
         NavManager.NavigateTo("/countryes");
     }

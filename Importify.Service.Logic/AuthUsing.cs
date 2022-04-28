@@ -107,8 +107,9 @@ namespace Importify.Service.Logic
 
             var userRoles = users.Select(us => mapper.Map<Role>(us.UserInfo.Role)).ToList();
 
-            config = new MapperConfiguration(cfg => cfg.CreateMap<Access.Entities.UserInfo, UserInfo>().ForMember(usi => usi.User, opt => opt.Ignore())
-                                                                                                           .ForMember(usi => usi.Role, opt => opt.Ignore()));
+            config = new MapperConfiguration(cfg => cfg.CreateMap<Access.Entities.UserInfo, UserInfo>()
+                                                       .ForMember(usi => usi.User, opt => opt.Ignore())
+                                                       .ForMember(usi => usi.Role, opt => opt.Ignore()));
             mapper = new Mapper(config);
             
             var userInfos = users.Select(us => mapper.Map<UserInfo>(us.UserInfo)).ToList();
@@ -132,12 +133,16 @@ namespace Importify.Service.Logic
         {
             var password = HashPassword(user.Password);
 
+            var role = new Access.Entities.Role();
+            role.Value = user.UserInfo.Role.Value;
+
             var config = new MapperConfiguration(cfg => cfg.CreateMap<UserInfo, Access.Entities.UserInfo>()
-                                                           .ForMember(usi => usi.User, opt => opt.Ignore()));
+                                                        .ForMember(usi => usi.User, opt => opt.Ignore())
+                                                        .ForMember(usi => usi.Role, opt => opt.Ignore()));
             var mapper = new Mapper(config);
 
             var userInfoModel = mapper.Map<Access.Entities.UserInfo>(user.UserInfo);
-
+            userInfoModel.Role = role;
 
             config = new MapperConfiguration(cfg => cfg.CreateMap<User, Access.Entities.User>()
                                                        .ForMember(usi => usi.UserInfo, opt => opt.Ignore())
@@ -153,24 +158,9 @@ namespace Importify.Service.Logic
         }
 
         /// <inheritdoc/>
-        public async Task<int> DeleteUserAsync(User user)
+        public async Task<int> DeleteUserAsync(int id)
         {
-            var config = new MapperConfiguration(cfg => cfg.CreateMap<UserInfo, Access.Entities.UserInfo>()
-                                               .ForMember(usi => usi.User, opt => opt.Ignore()));
-            var mapper = new Mapper(config);
-
-            var userInfoModel = mapper.Map<Access.Entities.UserInfo>(user.UserInfo);
-
-
-            config = new MapperConfiguration(cfg => cfg.CreateMap<User, Access.Entities.User>()
-                                                       .ForMember(usi => usi.UserInfo, opt => opt.Ignore())
-                                                       .ForMember(usi => usi.Massages, opt => opt.Ignore())
-                                                       .ForMember(usi => usi.Password, opt => opt.Ignore()));
-            mapper = new Mapper(config);
-
-            var userModel = mapper.Map<Access.Entities.User>(user);
-
-            return await _authAccess.DeleteUserAsync(userModel);
+            return await _authAccess.DeleteUserAsync(id);
         }
 
         private string GenerateAccessToken(IEnumerable<Claim> claims)
@@ -238,6 +228,9 @@ namespace Importify.Service.Logic
         {
             var user = await _authAccess.GetUserAsync(login);
 
+            if (user is null)
+                return null;
+
             var config = new MapperConfiguration(cfg => cfg.CreateMap<Access.Entities.Role, Role>().ForMember(r => r.UserInfo, opt => opt.Ignore()));
             var mapper = new Mapper(config);
 
@@ -259,6 +252,39 @@ namespace Importify.Service.Logic
             userModel.UserInfo = userInfo;
 
             return userModel;
+        }
+
+        public async Task<List<Role>> GetAllRoles()
+        {
+            return (await _authAccess.GetAllRoles()).Select(role => new Role() { Value = role.Value }).ToList();
+        }
+
+        public async Task<int> AddUserAsync(User user)
+        {
+            var password = HashPassword(user.Password);
+
+            var role = new Access.Entities.Role();
+            role.Value = user.UserInfo.Role.Value;
+
+            var config = new MapperConfiguration(cfg => cfg.CreateMap<UserInfo, Access.Entities.UserInfo>()
+                                                        .ForMember(usi => usi.User, opt => opt.Ignore())
+                                                        .ForMember(usi => usi.Role, opt => opt.Ignore()));
+            var mapper = new Mapper(config);
+
+            var userInfoModel = mapper.Map<Access.Entities.UserInfo>(user.UserInfo);
+            userInfoModel.Role = role;
+
+            config = new MapperConfiguration(cfg => cfg.CreateMap<User, Access.Entities.User>()
+                                                       .ForMember(usi => usi.UserInfo, opt => opt.Ignore())
+                                                       .ForMember(usi => usi.Massages, opt => opt.Ignore())
+                                                       .ForMember(usi => usi.Password, opt => opt.Ignore()));
+            mapper = new Mapper(config);
+
+            var userModel = mapper.Map<Access.Entities.User>(user);
+            userModel.UserInfo = userInfoModel;
+            userModel.Password = password;
+
+            return await _authAccess.AddUserAsync(userModel);
         }
     }
 }

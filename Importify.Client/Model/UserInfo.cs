@@ -2,7 +2,7 @@
 {
     public class UserInfo
     {
-        public int UserInfoId { get; set; }
+        public int? UserInfoId { get; set; }
 
         /// <summary>
         /// Gets or sets the number of phone.
@@ -10,7 +10,7 @@
         /// <value>
         /// The number of phone.
         /// </value>
-        public string NumberOfPhone { get; set; }
+        public string? NumberOfPhone { get; set; }
 
         /// <summary>
         /// Gets or sets the position.
@@ -26,6 +26,6 @@
         /// <value>
         /// The email.
         /// </value>
-        public string Email { get; set; }
+        public string? Email { get; set; }
     }
 }
