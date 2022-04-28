@@ -9,5 +9,6 @@ namespace Importify.Client.Service
         public Task<List<CountryConstituent>> GetCountryConstituentExportAsync(string country);
         public Task<List<ExportConstituent>> GetExportConstituent(string category);
         public Task<List<ImportConstituent>> GetImportConstituent(string category);
+        public Task<List<WorldExport>> GetWorldExport(string country);
     }
 }

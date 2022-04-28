@@ -91,7 +91,6 @@
 
         var user = await _authService.GetUser(login);
         Number = user.UserInfo.NumberOfPhone;
-        Number = "+375447940007";
 
         StateHasChanged();
     }

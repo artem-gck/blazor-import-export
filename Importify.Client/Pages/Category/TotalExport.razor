@@ -1,0 +1,50 @@
+﻿<div class="content">
+    @if (stateOfScreen)
+    {
+        <div>
+            <div class="title">Общемировой график экспорта</div>
+            <br/>
+            <br/>
+            <div class="text">Общемировой график экспорта отображает историю показателей суммарного экспорта по категории за последние 10 лет. <br/>Данные представлены в виде графика. Для просмотра информации необходимо выбрать страну в выпадающем списке.</div>
+            <br/>
+            <br/>
+            <select class="select" @bind="nameOfCategory">
+                @if (listOfCountry != null)
+                {
+                    @foreach (var country in listOfCountry)
+                    {
+                        <option value="@country.Name">@country.Name</option>
+                    }
+                }
+            </select>
+        </div>
+        <div>
+            <button @onclick="e => OnButtonClick()">Показать график</button>
+        </div>
+    }
+    else
+    {
+        <TotalExportPlot CountryName="@nameOfCategory" OnClickCallback="@OnButtonClick" />
+    }
+</div>
+
+@code {
+    [Inject]
+    private IBasicService _basicService { get; set; }
+
+    private bool stateOfScreen = true;
+
+    private string nameOfCategory = "Австралия";
+    private List<Country> listOfCountry;
+
+    protected override async Task OnInitializedAsync()
+    {
+        listOfCountry = await _basicService.GetCountryes();
+
+        if (listOfCountry is null)
+            NavManager.NavigateTo("/login");
+    }
+
+    private async Task OnButtonClick()
+        => stateOfScreen = !stateOfScreen;
+}

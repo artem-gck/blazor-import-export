@@ -194,6 +194,40 @@ namespace Importify.Client.Service.Logic
             return importConstituent;
         }
 
+        public async Task<List<WorldExport>> GetWorldExport(string country)
+        {
+            string responseString;
+            List<WorldExport> worldExport;
+
+            var cookieContent = await _storageService.GetItemAsync<string>("access_token");
+
+            if (cookieContent is null)
+                return null;
+
+            _httpClient.DefaultRequestHeaders.Remove("access_token");
+            _httpClient.DefaultRequestHeaders.Add("access_token", cookieContent);
+
+            var response = await _httpClient.GetAsync($"plot/worldexport/{country}");
+
+            if ((int)response.StatusCode == 401)
+            {
+                if (await SendRefreshToken(cookieContent) == -1)
+                    return null;
+
+                response = await _httpClient.GetAsync($"plot/worldexport/{country}");
+
+                responseString = await response.Content.ReadAsStringAsync();
+                worldExport = JsonConvert.DeserializeObject<List<WorldExport>>(responseString);
+
+                return worldExport;
+            }
+
+            responseString = await response.Content.ReadAsStringAsync();
+            worldExport = JsonConvert.DeserializeObject<List<WorldExport>>(responseString);
+
+            return worldExport;
+        }
+
         private async Task<int> SendRefreshToken(string cookieContent)
         {
             var tok = new Tokens()
