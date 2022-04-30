@@ -1,4 +1,5 @@
 ﻿@page "/registration"
+@using System.Text.RegularExpressions
 @layout LoginLayout
 
 <PageTitle>Регистрация</PageTitle>
@@ -42,12 +43,24 @@
     private string Password { get; set; }
     private string AnotherPassword { get; set; }
 
+    private Regex regexForEmail = new Regex(@"^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$", RegexOptions.Compiled | RegexOptions.IgnoreCase);
+
     private string error;
     private const string Position = "user";
 
     private async Task SendData()
     {
-        if (Password != AnotherPassword)
+        if (string.IsNullOrWhiteSpace(Email) || string.IsNullOrWhiteSpace(Login) || string.IsNullOrWhiteSpace(Password) || string.IsNullOrWhiteSpace(AnotherPassword))
+        {
+            error = "Поля не могут быть пустыми";
+            return;
+        }
+        else if (!regexForEmail.IsMatch(Email))
+        {
+            error = "Формат email неправильный";
+            return;
+        }
+        else if (Password != AnotherPassword)
         {
             error = "Пароли не совпадают";
             return;

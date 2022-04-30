@@ -84,3 +84,10 @@ textarea {
     width: 250px;
     margin-left: 5%;
 }
+
+.error {
+    margin-left: 5%;
+    font: 18px sans-serif;
+    font-family: "SF Compact Text", sans-serif;
+    color: #D32B27;
+}

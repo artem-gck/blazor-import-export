@@ -126,6 +126,8 @@ namespace Importify.Client.Service.Logic
             {
                 AccessToken = cookieContent,
                 RefreshToken = await _storageService.GetItemAsync<string>("refresh_token"),
+                Login = await _storageService.GetItemAsync<string>("user"),
+                Role = await _storageService.GetItemAsync<string>("role")
             };
 
             var resp = await _httpClient.PostAsJsonAsync("token/refresh", tok);

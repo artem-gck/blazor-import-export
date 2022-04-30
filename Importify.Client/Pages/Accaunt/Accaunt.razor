@@ -25,6 +25,7 @@
     {
         <textarea @bind="comment"></textarea>
 
+        <span class="error">@errorMassage</span>
         <button class="addComment" @onclick="async e => await AddMassage()">Добавить комментарий</button>
         <button class="exit" @onclick="async e => await Exit()">Выйти из аккаунта</button>
     }
@@ -71,6 +72,8 @@
     private IgbDataGrid DataGridRef;
     private int deletedId;
 
+    private string errorMassage;
+
     private string Login { 
         get => "@" + login; 
         set => login = value; 
@@ -97,19 +100,26 @@
 
     private async Task AddMassage()
     {
-        var massage = new Massage()
-            {
-                MassageText = comment,
-                User = login
-            };
+        if (!string.IsNullOrWhiteSpace(comment))
+        {
+            errorMassage = string.Empty;
 
-        var id = await _massageService.AddMassage(massage);
+            var massage = new Massage()
+                {
+                    MassageText = comment,
+                    User = login
+                };
 
-        if (id == - 1)
-            NavManager.NavigateTo("/login");
+            var id = await _massageService.AddMassage(massage);
 
-        data = await GetMassages();
-        StateHasChanged();
+            if (id == -1)
+                NavManager.NavigateTo("/login");
+
+            data = await GetMassages();
+            StateHasChanged();
+        }
+        else
+            errorMassage = "Поле ввода - пустое";
     }
 
     private async Task Exit()

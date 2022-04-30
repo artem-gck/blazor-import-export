@@ -92,6 +92,9 @@
     protected override async void OnInitialized()
     {
         data = await _authService.GetUsers();
+        var log = await localStorage.GetItemAsStringAsync("user");
+        data.Remove(data.FirstOrDefault(us => us.Login == log));
+
         roles = await _authService.GetAllRoles();
 
         StateHasChanged();
@@ -116,6 +119,8 @@
     {
         await _authService.DeleteUser(data[deletedId].Id);
 
+        var log = await localStorage.GetItemAsStringAsync("user");
+        data.Remove(data.FirstOrDefault(us => us.Login == log));
         data = await _authService.GetUsers();
         StateHasChanged();
     }
@@ -133,6 +138,8 @@
         await _authService.UpdateUser(user);
 
         data = await _authService.GetUsers();
+        var log = await localStorage.GetItemAsStringAsync("user");
+        data.Remove(data.FirstOrDefault(us => us.Login == log));
         StateHasChanged();
     }
 
@@ -159,6 +166,8 @@
 
         await _authService.AddUser(user);
 
+        var log = await localStorage.GetItemAsStringAsync("user");
+        data.Remove(data.FirstOrDefault(us => us.Login == log));
         data = await _authService.GetUsers();
         StateHasChanged();
     }
@@ -166,10 +175,16 @@
     private async Task Search(ChangeEventArgs e)
     {
         if (string.IsNullOrEmpty((string)e.Value))
+        {
             data = await _authService.GetUsers();
+            var log = await localStorage.GetItemAsStringAsync("user");
+            data.Remove(data.FirstOrDefault(us => us.Login == log));
+        }
         else
         {
             data = await _authService.SearchUsers((string)e.Value);
+            var log = await localStorage.GetItemAsStringAsync("user");
+            data.Remove(data.FirstOrDefault(us => us.Login == log));
             StateHasChanged();
         }
     }

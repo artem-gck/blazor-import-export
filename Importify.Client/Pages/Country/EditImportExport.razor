@@ -1,4 +1,5 @@
-﻿@inject IPlotService _plotService
+﻿@using System.Text.RegularExpressions
+@inject IPlotService _plotService
 
 <div class="countryYear">
     <div class="country">
@@ -24,11 +25,14 @@
         <span>$ тыс.</span>
     </div>
 </div>
-<div class="buttons">
-    <button @onclick="async e => await AddData()">Добавить</button>
-    <button @onclick="async e => await UpdateData()">Редактировать</button>
-    <button @onclick="async e => await DeleteData()">Удалить</button>
-    <button @onclick="OnClickCallback">Назад</button>
+<div>
+    <span class="error">@errorMassage</span>
+    <div class="buttons">
+        <button @onclick="async e => await AddData()">Добавить</button>
+        <button @onclick="async e => await UpdateData()">Редактировать</button>
+        <button @onclick="async e => await DeleteData()">Удалить</button>
+        <button @onclick="OnClickCallback">Назад</button>
+    </div>
 </div>
 
 @code {
@@ -40,8 +44,17 @@
     private string Import { get; set; }
     private string Export { get; set; }
 
+    private Regex regexForText = new Regex(@"^[a-zA-Z ]*$", RegexOptions.Compiled | RegexOptions.IgnoreCase);
+    private Regex regexForInt = new Regex(@"[1-9][0-9]*", RegexOptions.Compiled | RegexOptions.IgnoreCase);
+    private Regex regexForDecimal = new Regex(@"^(\d*\.)?\d+$", RegexOptions.Compiled | RegexOptions.IgnoreCase);
+
+    private string errorMassage;
+
     private async Task AddData()
     {
+        if (!ValidateDataAddUpdate())
+            return;
+
         var data = new CountryData()
         {
             Country = Country,
@@ -55,6 +68,9 @@
 
     private async Task UpdateData()
     {
+        if (!ValidateDataAddUpdate())
+            return;
+
         var data = new CountryData()
         {
             Country = Country,
@@ -68,6 +84,9 @@
 
     private async Task DeleteData()
     {
+        if (!ValidateDataDelete())
+            return;
+
         var data = new CountryData()
         {
             Country = Country,
@@ -75,5 +94,41 @@
         };
 
         await _plotService.DeleteCountryData(data);
+    }
+
+    private bool ValidateDataAddUpdate()
+    {
+        if (string.IsNullOrWhiteSpace(Country) || string.IsNullOrWhiteSpace(Year) || string.IsNullOrWhiteSpace(Import) || string.IsNullOrWhiteSpace(Export))
+        {
+            errorMassage = "Не все данные введены";
+            return false;
+        }
+        else if (!regexForText.IsMatch(Country) || !regexForInt.IsMatch(Year) || !regexForDecimal.IsMatch(Import) || !regexForDecimal.IsMatch(Export))
+        {
+            errorMassage = "Данные введены неверно";
+            return false;
+        }
+
+        errorMassage = string.Empty;
+
+        return true;
+    }
+
+        private bool ValidateDataDelete()
+    {
+        if (string.IsNullOrWhiteSpace(Country) || string.IsNullOrWhiteSpace(Year))
+        {
+            errorMassage = "Не все данные введены";
+            return false;
+        }
+        else if (!regexForText.IsMatch(Country) || !regexForInt.IsMatch(Year))
+        {
+            errorMassage = "Данные введены неверно";
+            return false;
+        }
+
+        errorMassage = string.Empty;
+
+        return true;
     }
 }

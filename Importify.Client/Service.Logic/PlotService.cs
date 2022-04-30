@@ -319,34 +319,6 @@ namespace Importify.Client.Service.Logic
             return worldExport;
         }
 
-        private async Task<int> SendRefreshToken(string cookieContent)
-        {
-            var tok = new Tokens()
-            {
-                AccessToken = cookieContent,
-                RefreshToken = await _storageService.GetItemAsync<string>("refresh_token"),
-            };
-
-            var resp = await _httpClient.PostAsJsonAsync("token/refresh", tok);
-
-            if ((int)resp.StatusCode == 404)
-                return -1;
-
-            var respString = await resp.Content.ReadAsStringAsync();
-            var tokens = JsonConvert.DeserializeObject<Tokens>(respString);
-
-            _httpClient.DefaultRequestHeaders.Remove("access_token");
-            _httpClient.DefaultRequestHeaders.Remove("refresh_token");
-            await _storageService.SetItemAsStringAsync("access_token", tokens.AccessToken);
-            await _storageService.SetItemAsStringAsync("refresh_token", tokens.RefreshToken);
-
-            cookieContent = await _storageService.GetItemAsync<string>("access_token");
-            _httpClient.DefaultRequestHeaders.Remove("access_token");
-            _httpClient.DefaultRequestHeaders.Add("access_token", cookieContent);
-
-            return 0;
-        }
-
         public async Task<List<CategoryShare>> GetCategoryShareImport(string category, int year)
         {
             string responseString;
@@ -413,6 +385,36 @@ namespace Importify.Client.Service.Logic
             categoryExport = JsonConvert.DeserializeObject<List<CategoryShare>>(responseString);
 
             return categoryExport;
+        }
+
+        private async Task<int> SendRefreshToken(string cookieContent)
+        {
+            var tok = new Tokens()
+            {
+                AccessToken = cookieContent,
+                RefreshToken = await _storageService.GetItemAsync<string>("refresh_token"),
+                Login = await _storageService.GetItemAsync<string>("user"),
+                Role = await _storageService.GetItemAsync<string>("role")
+            };
+
+            var resp = await _httpClient.PostAsJsonAsync("token/refresh", tok);
+
+            if ((int)resp.StatusCode == 404)
+                return -1;
+
+            var respString = await resp.Content.ReadAsStringAsync();
+            var tokens = JsonConvert.DeserializeObject<Tokens>(respString);
+
+            _httpClient.DefaultRequestHeaders.Remove("access_token");
+            _httpClient.DefaultRequestHeaders.Remove("refresh_token");
+            await _storageService.SetItemAsStringAsync("access_token", tokens.AccessToken);
+            await _storageService.SetItemAsStringAsync("refresh_token", tokens.RefreshToken);
+
+            cookieContent = await _storageService.GetItemAsync<string>("access_token");
+            _httpClient.DefaultRequestHeaders.Remove("access_token");
+            _httpClient.DefaultRequestHeaders.Add("access_token", cookieContent);
+
+            return 0;
         }
     }
 }
