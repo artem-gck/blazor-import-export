@@ -1,45 +1,57 @@
-﻿<div class="content">
-    @if (stateOfScreen)
+﻿@inject Blazored.LocalStorage.ILocalStorageService localStorage
+
+<div class="content">
+    @switch (stateOfScreen)
     {
-        <div>
-            <div class="title">Сводная таблица импорта и экспорта продукции</div>
-            <br/>
-            <br/>
-            <div class="text">Сводная таблица импорта и экспорта страны позволяет отследить показатели сумм стоимости всех экспортированных и импортированных товаров за последние 10 лет. Данные представляются в виде таблицы. Для просмотра необходимо выбрать страну в выпадающем списке.</div>
-            <br/>
-            <br/>
-            <select class="select" @bind="nameOfCountry">
-                @if (listOfCountry != null)
-                {
-                    @foreach (var country in listOfCountry)
+        case 0:
+            <div>
+                <div class="title">Сводная таблица импорта и экспорта продукции</div>
+                <br/>
+                <br/>
+                <div class="text">Сводная таблица импорта и экспорта страны позволяет отследить показатели сумм стоимости всех экспортированных и импортированных товаров за последние 10 лет. Данные представляются в виде таблицы. Для просмотра необходимо выбрать страну в выпадающем списке.</div>
+                <br/>
+                <br/>
+                <select class="select" @bind="nameOfCountry">
+                    @if (listOfCountry != null)
                     {
-                        <option value="@country.Name">@country.Name</option>
+                        @foreach (var country in listOfCountry)
+                        {
+                            <option value="@country.Name">@country.Name</option>
+                        }
                     }
+                </select>
+            </div>
+            <div>
+                <button @onclick="e => stateOfScreen = 1">Показать таблицу</button>
+                @if (role)
+                {
+                    <button @onclick="e => stateOfScreen = 2">Изменить данные</button>
                 }
-            </select>
-        </div>
-        <div>
-            <button @onclick="e => OnButtonClick()">Показать таблицу</button>
-            <button>Изменить данные</button>
-        </div>
-    }
-    else
-    {
-        <TotalImportExportTable CountryName="@nameOfCountry" OnClickCallback="@OnButtonClick"/>
+            </div>
+            break;
+        case 1:
+            <TotalImportExportTable CountryName="@nameOfCountry" OnClickCallback="@OnButtonClick"/>
+            break;
+        case 2:
+            <EditImportExport OnClickCallback="@OnButtonClick"/>
+            break;
     }
 </div>
 
 @code {
     [Inject]
     private IBasicService _basicService { get; set; }
-    
-    private bool stateOfScreen = true;
+
+    private bool role;
+    private byte stateOfScreen = 0;
 
     private string nameOfCountry = "Австралия";
     private List<Country> listOfCountry;
 
     protected override async Task OnInitializedAsync()
     {
+        var roleLocal = await localStorage.GetItemAsStringAsync("role");
+        role = roleLocal == "admin";
         listOfCountry = await _basicService.GetCountryes();
 
         if (listOfCountry is null)
@@ -47,5 +59,5 @@
     }
 
     private async Task OnButtonClick()
-        => stateOfScreen = !stateOfScreen;
+        => stateOfScreen = 0;
 }

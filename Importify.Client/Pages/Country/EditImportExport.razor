@@ -1,0 +1,79 @@
+﻿@inject IPlotService _plotService
+
+<div class="countryYear">
+    <div class="country">
+        <span>Страна</span>
+        <input class="inputCo" @bind="@Country"/>
+    </div>
+    <div class="year">
+        <span>Год</span>
+        <input class="inputCo" @bind="@Year"/>
+    </div>
+</div>
+<div class="importExport">
+    <div class="importLabels">
+        <span>Импорт</span>
+        <span>Экспорт</span>
+    </div>
+    <div class="importInput">
+        <input class="inputCo" @bind="@Import"/>
+        <input class="inputCo" @bind="@Export"/>
+    </div>
+     <div class="importPostfix">
+        <span>$ тыс.</span>
+        <span>$ тыс.</span>
+    </div>
+</div>
+<div class="buttons">
+    <button @onclick="async e => await AddData()">Добавить</button>
+    <button @onclick="async e => await UpdateData()">Редактировать</button>
+    <button @onclick="async e => await DeleteData()">Удалить</button>
+    <button @onclick="OnClickCallback">Назад</button>
+</div>
+
+@code {
+    [Parameter]
+    public EventCallback OnClickCallback { get; set; }
+
+    private string Country { get; set; }
+    private string Year { get; set; }
+    private string Import { get; set; }
+    private string Export { get; set; }
+
+    private async Task AddData()
+    {
+        var data = new CountryData()
+        {
+            Country = Country,
+            Year = int.Parse(Year),
+            ImportValue = decimal.Parse(Import),
+            ExportValue = decimal.Parse(Export)
+        };
+
+        await _plotService.AddCountryData(data);
+    }
+
+    private async Task UpdateData()
+    {
+        var data = new CountryData()
+        {
+            Country = Country,
+            Year = int.Parse(Year),
+            ImportValue = decimal.Parse(Import),
+            ExportValue = decimal.Parse(Export)
+        };
+
+        await _plotService.UpdateCountryData(data);
+    }
+
+    private async Task DeleteData()
+    {
+        var data = new CountryData()
+        {
+            Country = Country,
+            Year = int.Parse(Year)
+        };
+
+        await _plotService.DeleteCountryData(data);
+    }
+}

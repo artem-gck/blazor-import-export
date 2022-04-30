@@ -49,5 +49,7 @@ namespace Importify.Access
         public Task<int> DeleteUserAsync(int id);
 
         public Task<List<Role>> GetAllRoles();
+
+        public Task<List<User>> SearchUserAsync(string searchString);
     }
 }

@@ -113,8 +113,15 @@ namespace Importify.Access.SQLServer
         }
 
         public async Task<List<Role>> GetAllRoles()
-        {
-            return await _importifyContext.Roles.ToListAsync();
-        }
+            => await _importifyContext.Roles.ToListAsync();
+
+        public async Task<List<User>> SearchUserAsync(string searchString)
+            => await _importifyContext.Users.Include(us => us.UserInfo)
+                                            .ThenInclude(usI => usI.Role)
+                                            .Where(us => us.Login.Contains(searchString) ||
+                                                us.UserInfo.Email.Contains(searchString) || 
+                                                us.UserInfo.NumberOfPhone.Contains(searchString) || 
+                                                us.UserInfo.Role.Value.Contains(searchString))
+                                            .ToListAsync();
     }
 }

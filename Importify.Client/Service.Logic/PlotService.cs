@@ -3,6 +3,7 @@ using Importify.Client.Model;
 using Newtonsoft.Json;
 using System.Net.Http.Headers;
 using System.Net.Http.Json;
+using System.Text;
 
 namespace Importify.Client.Service.Logic
 {
@@ -22,6 +23,96 @@ namespace Importify.Client.Service.Logic
             _httpClient.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
 
             _storageService = storageService;
+        }
+
+        public async Task<int> AddCountryData(CountryData data)
+        {
+            string responseString;
+
+            var cookieContent = await _storageService.GetItemAsync<string>("access_token");
+
+            if (cookieContent is null)
+                return -1;
+
+            _httpClient.DefaultRequestHeaders.Remove("access_token");
+            _httpClient.DefaultRequestHeaders.Add("access_token", cookieContent);
+
+            var response = await _httpClient.PostAsJsonAsync("plot/commonimportexport", data);
+
+            if ((int)response.StatusCode == 401)
+            {
+                if (await SendRefreshToken(cookieContent) == -1)
+                    return -1;
+
+                response = await _httpClient.PostAsJsonAsync("plot/commonimportexport", data);
+
+                responseString = await response.Content.ReadAsStringAsync();
+                return int.Parse(responseString);
+            }
+
+            responseString = await response.Content.ReadAsStringAsync();
+            return int.Parse(responseString);
+        }
+
+        public async Task<int> DeleteCountryData(CountryData data)
+        {
+            var request = new HttpRequestMessage(HttpMethod.Delete, "plot/commonimportexport");
+            request.Content = new StringContent(JsonConvert.SerializeObject(data), Encoding.UTF8, "application/json");
+
+            string responseString;
+
+            var cookieContent = await _storageService.GetItemAsync<string>("access_token");
+
+            if (cookieContent is null)
+                return -1;
+
+            _httpClient.DefaultRequestHeaders.Remove("access_token");
+            _httpClient.DefaultRequestHeaders.Add("access_token", cookieContent);
+
+            var response = await _httpClient.SendAsync(request);
+
+            if ((int)response.StatusCode == 401)
+            {
+                if (await SendRefreshToken(cookieContent) == -1)
+                    return -1;
+
+                response = await _httpClient.SendAsync(request);
+
+                responseString = await response.Content.ReadAsStringAsync();
+                return int.Parse(responseString);
+            }
+
+            responseString = await response.Content.ReadAsStringAsync();
+            return int.Parse(responseString);
+        }
+
+        public async Task<int> UpdateCountryData(CountryData data)
+        {
+            string responseString;
+
+            var cookieContent = await _storageService.GetItemAsync<string>("access_token");
+
+            if (cookieContent is null)
+                return -1;
+
+            _httpClient.DefaultRequestHeaders.Remove("access_token");
+            _httpClient.DefaultRequestHeaders.Add("access_token", cookieContent);
+
+            var response = await _httpClient.PutAsJsonAsync("plot/commonimportexport", data);
+
+            if ((int)response.StatusCode == 401)
+            {
+                if (await SendRefreshToken(cookieContent) == -1)
+                    return -1;
+
+                response = await _httpClient.PutAsJsonAsync("plot/commonimportexport", data);
+
+                responseString = await response.Content.ReadAsStringAsync();
+                return int.Parse(responseString);
+            }
+
+            responseString = await response.Content.ReadAsStringAsync();
+            return int.Parse(responseString);
         }
 
         public async Task<List<CountryConstituent>> GetCountryConstituentAsync(string country, int year)
@@ -254,6 +345,74 @@ namespace Importify.Client.Service.Logic
             _httpClient.DefaultRequestHeaders.Add("access_token", cookieContent);
 
             return 0;
+        }
+
+        public async Task<List<CategoryShare>> GetCategoryShareImport(string category, int year)
+        {
+            string responseString;
+            List<CategoryShare> categoryImport;
+
+            var cookieContent = await _storageService.GetItemAsync<string>("access_token");
+
+            if (cookieContent is null)
+                return null;
+
+            _httpClient.DefaultRequestHeaders.Remove("access_token");
+            _httpClient.DefaultRequestHeaders.Add("access_token", cookieContent);
+
+            var response = await _httpClient.GetAsync($"plot/importshare/{category}/{year}");
+
+            if ((int)response.StatusCode == 401)
+            {
+                if (await SendRefreshToken(cookieContent) == -1)
+                    return null;
+
+                response = await _httpClient.GetAsync($"plot/importshare/{category}/{year}");
+
+                responseString = await response.Content.ReadAsStringAsync();
+                categoryImport = JsonConvert.DeserializeObject<List<CategoryShare>>(responseString);
+
+                return categoryImport;
+            }
+
+            responseString = await response.Content.ReadAsStringAsync();
+            categoryImport = JsonConvert.DeserializeObject<List<CategoryShare>>(responseString);
+
+            return categoryImport;
+        }
+
+        public async Task<List<CategoryShare>> GetCategoryShareExport(string category, int year)
+        {
+            string responseString;
+            List<CategoryShare> categoryExport;
+
+            var cookieContent = await _storageService.GetItemAsync<string>("access_token");
+
+            if (cookieContent is null)
+                return null;
+
+            _httpClient.DefaultRequestHeaders.Remove("access_token");
+            _httpClient.DefaultRequestHeaders.Add("access_token", cookieContent);
+
+            var response = await _httpClient.GetAsync($"plot/exportshare/{category}/{year}");
+
+            if ((int)response.StatusCode == 401)
+            {
+                if (await SendRefreshToken(cookieContent) == -1)
+                    return null;
+
+                response = await _httpClient.GetAsync($"plot/exportshare/{category}/{year}");
+
+                responseString = await response.Content.ReadAsStringAsync();
+                categoryExport = JsonConvert.DeserializeObject<List<CategoryShare>>(responseString);
+
+                return categoryExport;
+            }
+
+            responseString = await response.Content.ReadAsStringAsync();
+            categoryExport = JsonConvert.DeserializeObject<List<CategoryShare>>(responseString);
+
+            return categoryExport;
         }
     }
 }

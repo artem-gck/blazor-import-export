@@ -121,7 +121,7 @@ namespace Importify.Access.SQLServer
         /// <inheritdoc/>
         public async Task<int> DeleteCommonExportAsync(CommonExport commonExport)
         {
-            var export = await _context.CommonExports.FirstOrDefaultAsync(exp => exp.Year == commonExport.Year);
+            var export = await _context.CommonExports.FirstOrDefaultAsync(exp => exp.Year == commonExport.Year && exp.Country.Name == commonExport.Country.Name);
 
             _context.CommonExports.Remove(export);
             await _context.SaveChangesAsync();
@@ -132,7 +132,7 @@ namespace Importify.Access.SQLServer
         /// <inheritdoc/>
         public async Task<int> DeleteCommonImportAsync(CommonImport commonImport)
         {
-            var import = await _context.CommonImports.FirstOrDefaultAsync(imp => imp.Year == commonImport.Year);
+            var import = await _context.CommonImports.FirstOrDefaultAsync(imp => imp.Year == commonImport.Year && imp.Country.Name == commonImport.Country.Name);
 
             _context.CommonImports.Remove(import);
             await _context.SaveChangesAsync();
@@ -143,7 +143,7 @@ namespace Importify.Access.SQLServer
         /// <inheritdoc/>
         public async Task<int> UpdateCommonExportAsync(CommonExport commonExport)
         {
-            var export = await _context.CommonExports.FirstOrDefaultAsync(exp => exp.Year == commonExport.Year);
+            var export = await _context.CommonExports.FirstOrDefaultAsync(exp => exp.Year == commonExport.Year && exp.Country.Name == commonExport.Country.Name);
 
             export.Country = commonExport.Country;
             export.Year = commonExport.Year;
@@ -157,7 +157,7 @@ namespace Importify.Access.SQLServer
         /// <inheritdoc/>
         public async Task<int> UpdateCommonImportAsync(CommonImport commonImport)
         {
-            var import = await _context.CommonImports.FirstOrDefaultAsync(exp => exp.Year == commonImport.Year);
+            var import = await _context.CommonImports.FirstOrDefaultAsync(imp => imp.Year == commonImport.Year && imp.Country.Name == commonImport.Country.Name);
 
             import.Country = commonImport.Country;
             import.Year = commonImport.Year;

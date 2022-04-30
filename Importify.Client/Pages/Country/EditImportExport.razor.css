@@ -1,0 +1,72 @@
+﻿span {
+    font: 18px sans-serif;
+    font-family: "SF Compact Text", sans-serif;
+    color: #72778E;
+}
+
+button {
+    background-color: #354385;
+    border: 0px;
+    border-radius: 27px;
+    height: 40px;
+    font: 18px sans-serif;
+    font-family: "SF Compact Text", sans-serif;
+    color: white;
+    width: 150px;
+}
+
+.buttons {
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+}
+
+.inputCo {
+    width: 100%;
+    border: 0px;
+    border-radius: 25px;
+    height: 35px;
+    font-size: 18px;
+    font-family: "SF Compact Text", sans-serif;
+    padding-left: 10px;
+    background-color: lightgray;
+}
+
+.inputCo:focus {
+    outline: none !important
+}
+
+.country,
+.year,
+.importLabels,
+.importInput,
+.importPostfix {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+}
+
+.country {
+    padding-right: 50px;
+}
+
+.countryYear,
+.importExport {
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-start;
+}
+
+.importLabels,
+.importInput {
+    padding-right: 20px;
+}
+
+.importExport {
+    height: 25%;
+}
+
+.countryYear {
+    height: 15%;
+}

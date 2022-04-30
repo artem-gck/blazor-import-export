@@ -276,5 +276,39 @@ namespace Importify.Client.Service.Logic
 
             return roles;
         }
+
+        public async Task<List<UserView>> SearchUsers(string search)
+        {
+            string responseString;
+            List<User> users;
+
+            var cookieContent = await _storageService.GetItemAsync<string>("access_token");
+
+            if (cookieContent is null)
+                return null;
+
+            _httpClient.DefaultRequestHeaders.Remove("access_token");
+            _httpClient.DefaultRequestHeaders.Add("access_token", cookieContent);
+
+            var response = await _httpClient.GetAsync($"authentication/search/{search}");
+
+            if ((int)response.StatusCode == 401)
+            {
+                if (await SendRefreshToken(cookieContent) == -1)
+                    return null;
+
+                response = await _httpClient.GetAsync($"authentication/search/{search}");
+
+                responseString = await response.Content.ReadAsStringAsync();
+                users = JsonConvert.DeserializeObject<List<User>>(responseString);
+
+                return MapUsers(users);
+            }
+
+            responseString = await response.Content.ReadAsStringAsync();
+            users = JsonConvert.DeserializeObject<List<User>>(responseString);
+
+            return MapUsers(users);
+        }
     }
 }

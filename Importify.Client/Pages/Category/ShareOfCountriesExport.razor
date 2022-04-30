@@ -1,0 +1,62 @@
+﻿<div class="content">
+    @if (stateOfScreen)
+    {
+        <div>
+            <div class="title">Доля стран в экспорте по категории</div>
+            <br/>
+            <br/>
+            <div class="text">Диаграмма отражает долю стран в общемировом экспорте в выбранной категории по состоянию на выбранный год. <br/>Данные отображаются в виде круговой диаграммы. Для просмотра необходимо выбрать категорию и год в выпадающих списках.</div>
+            <br/>
+            <br/>
+            <select class="select" @bind="nameOfCategory">
+                @if (listOfCategory != null)
+                {
+                    @foreach (var country in listOfCategory)
+                    {
+                        <option value="@country.Name">@country.Name</option>
+                    }
+                }
+            </select>
+            <select class="select" @bind="valueOfYear">
+                @if (listOfYear != null)
+                {
+                    @foreach (var year in listOfYear)
+                    {
+                        <option value="@year.Value">@year.Value</option>
+                    }
+                }
+            </select>
+        </div>
+        <div>
+            <button @onclick="e => OnButtonClick()">Показать таблицу</button>
+        </div>
+    }
+    else
+    {
+        <ShareOfCountriesExportPlot CategoryName="@nameOfCategory" YearValue="@valueOfYear" OnClickCallback="@OnButtonClick"/>
+    }
+</div>
+
+@code {
+    [Inject]
+    private IBasicService _basicService { get; set; }
+
+    private bool stateOfScreen = true;
+
+    private string nameOfCategory = "Химикаты";
+    private int valueOfYear = 2009;
+    private List<Category> listOfCategory;
+    private List<Year> listOfYear;
+
+    protected override async Task OnInitializedAsync()
+    {
+        listOfCategory = await _basicService.GetCategories();
+        listOfYear = await _basicService.GetYears();
+
+        if (listOfCategory is null)
+            NavManager.NavigateTo("/login");
+    }
+
+    private async Task OnButtonClick()
+        => stateOfScreen = !stateOfScreen;
+}

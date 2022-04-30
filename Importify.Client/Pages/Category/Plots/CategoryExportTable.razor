@@ -50,13 +50,13 @@
 
     private async Task DownloadFileFromStream()
     {
-        //var file = await _excelGenerator.GenerateCategoryExportCategoryTable(data);
-        //var fileStream = new MemoryStream(file);
+        var file = await _excelGenerator.GenerateCategoryExportTablePlot(data);
+        var fileStream = new MemoryStream(file);
 
-        //var fileName = $"Экспорт в направлении {CategoryName}.xlsx";
+        var fileName = $"Экспорт в направлении {CategoryName}.xlsx";
 
-        //using var streamRef = new DotNetStreamReference(stream: fileStream);
+        using var streamRef = new DotNetStreamReference(stream: fileStream);
 
-        //await JS.InvokeVoidAsync("downloadFileFromStream", fileName, streamRef);
+        await JS.InvokeVoidAsync("downloadFileFromStream", fileName, streamRef);
     }
 }

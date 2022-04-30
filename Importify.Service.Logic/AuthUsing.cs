@@ -286,5 +286,35 @@ namespace Importify.Service.Logic
 
             return await _authAccess.AddUserAsync(userModel);
         }
+
+        public async Task<List<User>> SearchUsersAsync(string searchString)
+        {
+            var users = await _authAccess.SearchUserAsync(searchString);
+
+            var config = new MapperConfiguration(cfg => cfg.CreateMap<Access.Entities.Role, Role>().ForMember(r => r.UserInfo, opt => opt.Ignore()));
+            var mapper = new Mapper(config);
+
+            var userRoles = users.Select(us => mapper.Map<Role>(us.UserInfo.Role)).ToList();
+
+            config = new MapperConfiguration(cfg => cfg.CreateMap<Access.Entities.UserInfo, UserInfo>()
+                                                       .ForMember(usi => usi.User, opt => opt.Ignore())
+                                                       .ForMember(usi => usi.Role, opt => opt.Ignore()));
+            mapper = new Mapper(config);
+
+            var userInfos = users.Select(us => mapper.Map<UserInfo>(us.UserInfo)).ToList();
+
+            for (var i = 0; i < userInfos.Count; i++)
+                userInfos[i].Role = userRoles[i];
+
+            config = new MapperConfiguration(cfg => cfg.CreateMap<Access.Entities.User, User>().ForMember(us => us.UserInfo, opt => opt.Ignore()));
+            mapper = new Mapper(config);
+
+            var userModels = users.Select(us => mapper.Map<User>(us)).ToList();
+
+            for (var i = 0; i < userInfos.Count; i++)
+                userModels[i].UserInfo = userInfos[i];
+
+            return userModels;
+        }
     }
 }

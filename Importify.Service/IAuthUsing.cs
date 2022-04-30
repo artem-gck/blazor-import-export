@@ -47,5 +47,7 @@ namespace Importify.Service
         public Task<List<Role>> GetAllRoles();
 
         public Task<int> AddUserAsync(User user);
+
+        public Task<List<User>> SearchUsersAsync(string searchString);
     }
 }

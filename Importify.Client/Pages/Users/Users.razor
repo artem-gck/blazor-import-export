@@ -12,10 +12,15 @@
         <div class="leftS">
             <div class="conta vertical">
                 <div class="conta vertical" style="--use-accessibility:true;">
+                    <div class="searchPlace">
+                        <span>Поиск</span>
+                    </div>
+                   
+                    <input class="searchLine" @oninput="async e => await Search(e)"/>
                     @if (data != null)
                     {
                         <div style="overflow: hidden">
-                            <IgbDataGrid Height="600px" 
+                            <IgbDataGrid Height="520px" 
                                          Width="100%"
                                          DataSource="data"
                                          AutoGenerateColumns="false"
@@ -76,6 +81,7 @@
     private string Password { get; set; }
     private string Email { get; set; }
     private string NumberOfPhone { get; set; }
+    private string SearchString { get; set; }
 
     private string role = "user";
     private int deletedId;
@@ -155,5 +161,16 @@
 
         data = await _authService.GetUsers();
         StateHasChanged();
+    }
+
+    private async Task Search(ChangeEventArgs e)
+    {
+        if (string.IsNullOrEmpty((string)e.Value))
+            data = await _authService.GetUsers();
+        else
+        {
+            data = await _authService.SearchUsers((string)e.Value);
+            StateHasChanged();
+        }
     }
 }

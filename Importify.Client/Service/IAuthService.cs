@@ -12,5 +12,6 @@ namespace Importify.Client.Service
         public Task<int> AddUser(User user);
         public Task<int> UpdateUser(User user);
         public Task<List<Role>> GetAllRoles();
+        public Task<List<UserView>> SearchUsers(string search);
     }
 }

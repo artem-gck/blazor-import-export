@@ -26,6 +26,10 @@ namespace Importify.Controllers
 
             user.Password = loginModel.Password;
             var tokens = await _authService.LoginAsync(user);
+
+            if (tokens is null)
+                return null;
+
             tokens.Login = loginModel.Login;
             tokens.Role = user.UserInfo.Role.Value;
 
@@ -110,6 +114,15 @@ namespace Importify.Controllers
         {
             if (await _tokenService.CheckAccessKey(Request.Headers[_headerName].ToString()))
                 return await _authService.AddUserAsync(user);
+            else
+                return Unauthorized();
+        }
+
+        [HttpGet("search/{search}")]
+        public async Task<ActionResult<List<User>>> SearchUsersAsync(string search)
+        {
+            if (await _tokenService.CheckAccessKey(Request.Headers[_headerName].ToString()))
+                return await _authService.SearchUsersAsync(search);
             else
                 return Unauthorized();
         }
