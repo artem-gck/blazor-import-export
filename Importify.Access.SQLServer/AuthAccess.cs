@@ -93,6 +93,18 @@ namespace Importify.Access.SQLServer
             return us.UserId;
         }
 
+        public async Task<List<Role>> GetAllRoles()
+            => await _importifyContext.Roles.ToListAsync();
+
+        public async Task<List<User>> SearchUserAsync(string searchString)
+            => await _importifyContext.Users.Include(us => us.UserInfo)
+                                            .ThenInclude(usI => usI.Role)
+                                            .Where(us => us.Login.Contains(searchString) ||
+                                                us.UserInfo.Email.Contains(searchString) || 
+                                                us.UserInfo.NumberOfPhone.Contains(searchString) || 
+                                                us.UserInfo.Role.Value.Contains(searchString))
+                                            .ToListAsync();
+
         private async Task<Role> GetRole(string role)
         {
             var roleDb = await _importifyContext.Roles.FirstOrDefaultAsync(r => r.Value == role);
@@ -111,17 +123,5 @@ namespace Importify.Access.SQLServer
 
             return roleDb;
         }
-
-        public async Task<List<Role>> GetAllRoles()
-            => await _importifyContext.Roles.ToListAsync();
-
-        public async Task<List<User>> SearchUserAsync(string searchString)
-            => await _importifyContext.Users.Include(us => us.UserInfo)
-                                            .ThenInclude(usI => usI.Role)
-                                            .Where(us => us.Login.Contains(searchString) ||
-                                                us.UserInfo.Email.Contains(searchString) || 
-                                                us.UserInfo.NumberOfPhone.Contains(searchString) || 
-                                                us.UserInfo.Role.Value.Contains(searchString))
-                                            .ToListAsync();
     }
 }

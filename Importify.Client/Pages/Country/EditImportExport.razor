@@ -44,7 +44,7 @@
     private string Import { get; set; }
     private string Export { get; set; }
 
-    private Regex regexForText = new Regex(@"^[a-zA-Z ]*$", RegexOptions.Compiled | RegexOptions.IgnoreCase);
+    private Regex regexForText = new Regex(@"^[а-яА-Я ]*$", RegexOptions.Compiled | RegexOptions.IgnoreCase);
     private Regex regexForInt = new Regex(@"[1-9][0-9]*", RegexOptions.Compiled | RegexOptions.IgnoreCase);
     private Regex regexForDecimal = new Regex(@"^(\d*\.)?\d+$", RegexOptions.Compiled | RegexOptions.IgnoreCase);
 
@@ -64,6 +64,8 @@
         };
 
         await _plotService.AddCountryData(data);
+
+        Clear();
     }
 
     private async Task UpdateData()
@@ -80,6 +82,8 @@
         };
 
         await _plotService.UpdateCountryData(data);
+
+        Clear();
     }
 
     private async Task DeleteData()
@@ -94,6 +98,8 @@
         };
 
         await _plotService.DeleteCountryData(data);
+
+        Clear();
     }
 
     private bool ValidateDataAddUpdate()
@@ -114,7 +120,7 @@
         return true;
     }
 
-        private bool ValidateDataDelete()
+    private bool ValidateDataDelete()
     {
         if (string.IsNullOrWhiteSpace(Country) || string.IsNullOrWhiteSpace(Year))
         {
@@ -130,5 +136,15 @@
         errorMassage = string.Empty;
 
         return true;
+    }
+
+    private void Clear()
+    {
+        Country = string.Empty;
+        Year = string.Empty;
+        Import = string.Empty;
+        Export = string.Empty;
+
+        errorMassage = string.Empty;
     }
 }
